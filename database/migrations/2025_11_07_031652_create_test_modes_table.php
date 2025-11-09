@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('test_modes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('model_id')->constrained('models')->onDelete('cascade');
+            $table->foreignId('device_model_id')->constrained('device_models')->onDelete('cascade');
             $table->string('entry_combination');
             $table->string('exit_combination')->nullable();
             $table->text('notes')->nullable();

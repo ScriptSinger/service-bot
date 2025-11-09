@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('manuals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('model_id')->constrained('models')->onDelete('cascade');
+            $table->foreignId('device_model_id')->constrained('device_models')->onDelete('cascade');
             $table->string('title');
             $table->string('file_url');
             $table->string('language', 10)->nullable();

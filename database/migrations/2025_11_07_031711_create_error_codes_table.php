@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('error_codes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('model_id')->constrained('models')->onDelete('cascade');
+            $table->foreignId('device_model_id')->constrained('device_models')->onDelete('cascade');
             $table->string('code')->index();
             $table->text('description');
             $table->enum('severity', ['info', 'warning', 'critical'])->default('info');
