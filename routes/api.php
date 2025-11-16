@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\DeviceModelController;
-use App\Http\Controllers\DeviceTypeController;
-use App\Http\Controllers\ErrorCodeController;
-use App\Http\Controllers\ManualController;
+use App\Http\Controllers\Api\DeviceModelController;
+use App\Http\Controllers\Api\DeviceTypeController;
+use App\Http\Controllers\Api\ErrorCodeController;
+use App\Http\Controllers\Api\ManualController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
