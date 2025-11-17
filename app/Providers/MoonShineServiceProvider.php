@@ -10,6 +10,12 @@ use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\Laravel\DependencyInjection\MoonShineConfigurator;
 use App\MoonShine\Resources\MoonShineUser\MoonShineUserResource;
 use App\MoonShine\Resources\MoonShineUserRole\MoonShineUserRoleResource;
+use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
+use App\MoonShine\Resources\Brand\BrandResource;
+use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
+use App\MoonShine\Resources\Manual\ManualResource;
+use App\MoonShine\Resources\TestMode\TestModeResource;
+use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -22,6 +28,12 @@ class MoonShineServiceProvider extends ServiceProvider
             ->resources([
                 MoonShineUserResource::class,
                 MoonShineUserRoleResource::class,
+                DeviceTypeResource::class,
+                BrandResource::class,
+                DeviceModelResource::class,
+                ManualResource::class,
+                TestModeResource::class,
+                ErrorCodeResource::class,
             ])
             ->pages([
                 ...$core->getConfig()->getPages(),
