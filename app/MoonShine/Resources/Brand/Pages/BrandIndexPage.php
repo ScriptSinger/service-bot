@@ -30,10 +30,10 @@ class BrandIndexPage extends IndexPage
     protected function fields(): iterable
     {
         return [
-            ID::make(),
-            Text::make('Name'),
-            Text::make('Slug'),
-            Text::make('Country'),
+            ID::make()->sortable(),
+            Text::make('Name')->sortable(),
+            Text::make('Slug')->sortable(),
+            Text::make('Country')->sortable(),
         ];
     }
 

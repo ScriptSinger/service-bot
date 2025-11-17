@@ -33,10 +33,14 @@ class ManualIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Device Model', 'deviceModel', DeviceModelResource::class),
-            Text::make('Title'),
-            Text::make('File URL', 'file_url'),
-            Text::make('Language'),
+            BelongsTo::make(
+                'Device Model',
+                'deviceModel',
+                fn($item) => $item->name,
+                DeviceModelResource::class
+            )->sortable(),
+            Text::make('File URL', 'file_url')->sortable(),
+            Text::make('Language')->sortable(),
         ];
     }
 

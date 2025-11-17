@@ -25,17 +25,6 @@ class ErrorCodeResource extends ModelResource
 {
     protected string $model = ErrorCode::class;
 
-    public function fields(): array
-    {
-        return [
-            ID::make(),
-            BelongsTo::make('Device Model', 'deviceModel', DeviceModelResource::class),
-            Text::make('Code'),
-            Textarea::make('Description'),
-            Text::make('Severity'),
-        ];
-    }
-
     protected string $title = 'ErrorCodes';
 
     /**

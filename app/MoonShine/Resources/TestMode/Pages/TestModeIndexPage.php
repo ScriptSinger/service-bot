@@ -35,15 +35,15 @@ class TestModeIndexPage extends IndexPage
     protected function fields(): iterable
     {
         return [
-            ID::make(),
+            ID::make()->sortable(),
             BelongsTo::make(
                 'Device Model',
                 'deviceModel',
                 fn($item) => $item->name,
                 DeviceModelResource::class
-            ),
-            Text::make('Entry Combination', 'entry_combination'),
-            Text::make('Exit Combination', 'exit_combination'),
+            )->sortable(),
+            Text::make('Entry Combination', 'entry_combination')->sortable(),
+            Text::make('Exit Combination', 'exit_combination')->sortable(),
             Textarea::make('Notes', 'notes', fn($item) => Str::limit($item->notes, 50))
                 ->textWrap(TextWrap::ELLIPSIS),
             Text::make('Image URL', 'image_url'),

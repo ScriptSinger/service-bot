@@ -38,13 +38,18 @@ class DeviceModelIndexPage extends IndexPage
     protected function fields(): iterable
     {
         return [
-            ID::make(),
-            BelongsTo::make('Brand', 'brand', BrandResource::class),
-            Text::make('Name'),
+            ID::make()->sortable(),
+            BelongsTo::make(
+                'Brand',
+                'brand',
+                fn($item) => $item->name,
+                BrandResource::class
+            )->sortable(),
+            Text::make('Name')->sortable(),
             Textarea::make('Description'),
-            Number::make('Year From', 'year_from'),
-            Number::make('Year To', 'year_to'),
-            Text::make('Image URL', 'image_url'),
+            Number::make('Year From', 'year_from')->sortable(),
+            Number::make('Year To', 'year_to')->sortable(),
+            Text::make('Image URL', 'image_url')->sortable(),
             // SwitchBoolean::make('Active'),
             // HasMany::make('Manuals', 'manuals', ManualResource::class),
             // HasMany::make('Test Modes', 'testModes', TestModeResource::class),

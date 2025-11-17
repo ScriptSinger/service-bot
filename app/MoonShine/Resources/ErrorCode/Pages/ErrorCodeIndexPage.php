@@ -33,16 +33,16 @@ class ErrorCodeIndexPage extends IndexPage
     protected function fields(): iterable
     {
         return [
-            ID::make(),
+            ID::make()->sortable(),
 
             BelongsTo::make(
                 'Device Model',
                 'deviceModel',
                 DeviceModelResource::class
-            ),
-            Text::make('Code'),
-            Textarea::make('Description'),
-            Text::make('Severity'),
+            )->sortable(),
+            Text::make('Code')->sortable(),
+            Textarea::make('Description')->sortable(),
+            Text::make('Severity')->sortable(),
         ];
     }
 
