@@ -9,14 +9,10 @@ use App\Models\Brand;
 use App\MoonShine\Resources\Brand\Pages\BrandIndexPage;
 use App\MoonShine\Resources\Brand\Pages\BrandFormPage;
 use App\MoonShine\Resources\Brand\Pages\BrandDetailPage;
-use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
-use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
-use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\UI\Fields\ID;
-use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Textarea;
 
 /**
  * @extends ModelResource<Brand, BrandIndexPage, BrandFormPage, BrandDetailPage>
@@ -30,12 +26,8 @@ class BrandResource extends ModelResource
     public function fields(): array
     {
         return [
-            ID::make()->sortable(),
-            BelongsTo::make('Device Type', 'deviceType', DeviceTypeResource::class),
-            Text::make('Name'),
-            Text::make('Slug'),
-            Text::make('Country'),
-            HasMany::make('Models', 'deviceModels', DeviceModelResource::class),
+            ID::make(),
+            Textarea::make('Name', 'name'),
         ];
     }
 

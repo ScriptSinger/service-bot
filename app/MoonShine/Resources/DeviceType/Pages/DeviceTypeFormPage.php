@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\DeviceType\Pages;
 
+use App\MoonShine\Resources\Brand\BrandResource;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -11,9 +12,12 @@ use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
+use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
+use MoonShine\Laravel\Fields\Slug;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
+use MoonShine\UI\Fields\Text;
 use Throwable;
 
 
@@ -30,6 +34,14 @@ class DeviceTypeFormPage extends FormPage
         return [
             Box::make([
                 ID::make(),
+                Text::make('Name'),
+                Slug::make('Slug'),
+                BelongsToMany::make(
+                    'Brands',
+                    'brands',
+                    fn($item) => $item->name,
+                    BrandResource::class
+                ),
             ]),
         ];
     }

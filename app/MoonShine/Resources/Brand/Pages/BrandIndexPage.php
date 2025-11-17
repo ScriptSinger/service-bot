@@ -13,6 +13,7 @@ use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\Brand\BrandResource;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\Text;
 use Throwable;
 
 
@@ -30,6 +31,9 @@ class BrandIndexPage extends IndexPage
     {
         return [
             ID::make(),
+            Text::make('Name'),
+            Text::make('Slug'),
+            Text::make('Country'),
         ];
     }
 

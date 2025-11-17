@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\DeviceType\Pages;
 
+use App\MoonShine\Resources\Brand\BrandResource;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
+
+use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
+
+use MoonShine\Laravel\Fields\Slug;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
+use MoonShine\UI\Fields\Text;
 use Throwable;
 
 
@@ -26,6 +32,14 @@ class DeviceTypeDetailPage extends DetailPage
     {
         return [
             ID::make(),
+            Text::make('Name'),
+            Slug::make('Slug'),
+            BelongsToMany::make(
+                'Brands',
+                'brands',
+                fn($item) => $item->name,
+                BrandResource::class
+            ),
         ];
     }
 

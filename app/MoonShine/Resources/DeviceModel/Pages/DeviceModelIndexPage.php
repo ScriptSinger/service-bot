@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\DeviceModel\Pages;
 
+use App\MoonShine\Resources\Brand\BrandResource;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -12,7 +13,15 @@ use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
+use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
+use App\MoonShine\Resources\Manual\ManualResource;
+use App\MoonShine\Resources\TestMode\TestModeResource;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\Number;
+use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
 
@@ -30,6 +39,16 @@ class DeviceModelIndexPage extends IndexPage
     {
         return [
             ID::make(),
+            BelongsTo::make('Brand', 'brand', BrandResource::class),
+            Text::make('Name'),
+            Textarea::make('Description'),
+            Number::make('Year From', 'year_from'),
+            Number::make('Year To', 'year_to'),
+            Text::make('Image URL', 'image_url'),
+            // SwitchBoolean::make('Active'),
+            // HasMany::make('Manuals', 'manuals', ManualResource::class),
+            // HasMany::make('Test Modes', 'testModes', TestModeResource::class),
+            // HasMany::make('Error Codes', 'errorCodes', ErrorCodeResource::class),
         ];
     }
 

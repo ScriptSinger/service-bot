@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\TestMode\Pages;
 
+use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -11,9 +12,12 @@ use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use App\MoonShine\Resources\TestMode\TestModeResource;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
+use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
 
@@ -30,6 +34,16 @@ class TestModeFormPage extends FormPage
         return [
             Box::make([
                 ID::make(),
+                BelongsTo::make(
+                    'Device Model',
+                    'deviceModel',
+                    fn($item) => $item->name,
+                    DeviceModelResource::class
+                ),
+                Text::make('Entry Combination', 'entry_combination'),
+                Text::make('Exit Combination', 'exit_combination'),
+                Textarea::make('Notes'),
+                Text::make('Image URL', 'image_url'),
             ]),
         ];
     }

@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\ErrorCode\Pages;
 
+use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
+use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
 
@@ -26,6 +30,15 @@ class ErrorCodeDetailPage extends DetailPage
     {
         return [
             ID::make(),
+            BelongsTo::make(
+                'Device Model',
+                'deviceModel',
+                fn($item) => $item->name,
+                DeviceModelResource::class
+            ),
+            Text::make('Code'),
+            Textarea::make('Description'),
+            Text::make('Severity'),
         ];
     }
 

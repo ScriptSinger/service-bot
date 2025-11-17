@@ -13,9 +13,9 @@ class Brand extends Model
         'country',
     ];
 
-    public function deviceType()
+    public function deviceTypes()
     {
-        return $this->belongsTo(DeviceType::class);
+        return $this->belongsToMany(DeviceType::class);
     }
 
     public function deviceModels()

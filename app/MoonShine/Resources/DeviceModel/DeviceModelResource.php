@@ -31,6 +31,8 @@ class DeviceModelResource extends ModelResource
 
     protected string $title = 'DeviceModels';
 
+
+
     public function fields(): array
     {
         return [

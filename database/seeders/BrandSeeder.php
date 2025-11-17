@@ -13,21 +13,30 @@ class BrandSeeder extends Seeder
      */
     public function run(): void
     {
-        $brands = [
-            // Washing Machines (id = 1)
-            ['device_type_id' => 1, 'name' => 'Samsung', 'slug' => 'samsung', 'country' => 'South Korea'],
-            ['device_type_id' => 1, 'name' => 'LG', 'slug' => 'lg', 'country' => 'South Korea'],
-            ['device_type_id' => 1, 'name' => 'Bosch', 'slug' => 'bosch', 'country' => 'Germany'],
+        $data = [
+            // Washing Machines
+            ['name' => 'Samsung', 'slug' => 'samsung', 'country' => 'South Korea', 'device_type_ids' => [1]],
+            ['name' => 'LG', 'slug' => 'lg', 'country' => 'South Korea', 'device_type_ids' => [1]],
+            ['name' => 'Bosch', 'slug' => 'bosch', 'country' => 'Germany', 'device_type_ids' => [1]],
 
-            // Refrigerators (id = 2)
-            ['device_type_id' => 2, 'name' => 'Whirlpool', 'slug' => 'whirlpool', 'country' => 'USA'],
-            ['device_type_id' => 2, 'name' => 'Haier', 'slug' => 'haier', 'country' => 'China'],
+            // Refrigerators
+            ['name' => 'Whirlpool', 'slug' => 'whirlpool', 'country' => 'USA', 'device_type_ids' => [2]],
+            ['name' => 'Haier', 'slug' => 'haier', 'country' => 'China', 'device_type_ids' => [2]],
 
-            // TV (id = 8)
-            ['device_type_id' => 8, 'name' => 'Sony', 'slug' => 'sony', 'country' => 'Japan'],
-            ['device_type_id' => 8, 'name' => 'Panasonic', 'slug' => 'panasonic', 'country' => 'Japan'],
+            // TV
+            ['name' => 'Sony', 'slug' => 'sony', 'country' => 'Japan', 'device_type_ids' => [8]],
+            ['name' => 'Panasonic', 'slug' => 'panasonic', 'country' => 'Japan', 'device_type_ids' => [8]],
         ];
 
-        Brand::insert($brands);
+        foreach ($data as $brandData) {
+            // Создаём бренд
+            $deviceTypeIds = $brandData['device_type_ids'];
+            unset($brandData['device_type_ids']);
+
+            $brand = Brand::create($brandData);
+
+            // Привязываем device types через pivot
+            $brand->deviceTypes()->attach($deviceTypeIds);
+        }
     }
 }

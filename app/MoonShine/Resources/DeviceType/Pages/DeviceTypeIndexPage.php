@@ -12,7 +12,9 @@ use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
+use MoonShine\Laravel\Fields\Slug;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\Text;
 use Throwable;
 
 
@@ -29,7 +31,9 @@ class DeviceTypeIndexPage extends IndexPage
     protected function fields(): iterable
     {
         return [
-            ID::make(),
+            ID::make()->sortable(),
+            Text::make('Name', 'name')->sortable(),
+            Slug::make('Slug', 'slug')->sortable(),
         ];
     }
 

@@ -9,8 +9,11 @@ use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\Brand\BrandResource;
+use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
+use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
+use MoonShine\UI\Fields\Text;
 use Throwable;
 
 
@@ -26,6 +29,15 @@ class BrandDetailPage extends DetailPage
     {
         return [
             ID::make(),
+            Text::make('Name'),
+            Text::make('Slug'),
+            Text::make('Country'),
+            BelongsToMany::make(
+                'DeviceTypes',
+                'deviceTypes',
+                fn($item) => $item->name,
+                DeviceTypeResource::class
+            ),
         ];
     }
 

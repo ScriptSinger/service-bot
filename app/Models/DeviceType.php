@@ -13,6 +13,6 @@ class DeviceType extends Model
 
     public function brands()
     {
-        return $this->hasMany(Brand::class);
+        return $this->belongsToMany(Brand::class);
     }
 }

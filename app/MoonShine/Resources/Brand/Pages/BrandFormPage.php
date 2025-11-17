@@ -11,9 +11,12 @@ use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use App\MoonShine\Resources\Brand\BrandResource;
+use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
+use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
+use MoonShine\UI\Fields\Text;
 use Throwable;
 
 
@@ -30,6 +33,15 @@ class BrandFormPage extends FormPage
         return [
             Box::make([
                 ID::make(),
+                Text::make('Name'),
+                Text::make('Slug'),
+                Text::make('Country'),
+                BelongsToMany::make(
+                    'DeviceTypes',
+                    'deviceTypes',
+                    fn($item) => $item->name,
+                    DeviceTypeResource::class
+                ),
             ]),
         ];
     }

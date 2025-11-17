@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\ErrorCode\Pages;
 
+use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -12,7 +13,10 @@ use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
 
@@ -30,6 +34,15 @@ class ErrorCodeIndexPage extends IndexPage
     {
         return [
             ID::make(),
+
+            BelongsTo::make(
+                'Device Model',
+                'deviceModel',
+                DeviceModelResource::class
+            ),
+            Text::make('Code'),
+            Textarea::make('Description'),
+            Text::make('Severity'),
         ];
     }
 
