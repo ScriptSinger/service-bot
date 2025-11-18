@@ -17,12 +17,10 @@ class TelegramController extends Controller
 
     public function webhook(Request $request)
     {
-        // Прямо передаем весь update в TelegramService (диспетчер)
+
         Log::info('Telegram update', $request->all());
         $update = $request->all();
-
         $this->telegram->handleUpdate($update);
-
         return response()->json(['ok' => true]);
     }
 }

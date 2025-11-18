@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\Manual\Pages;
+namespace App\MoonShine\Resources\ManualFile\Pages;
 
-use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
+use App\MoonShine\Resources\Manual\ManualResource;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -12,18 +12,18 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
-use App\MoonShine\Resources\Manual\ManualResource;
+use App\MoonShine\Resources\ManualFile\ManualFileResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
-use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Date;
+use MoonShine\UI\Fields\Text;
 use Throwable;
 
 
 /**
- * @extends IndexPage<ManualResource>
+ * @extends IndexPage<ManualFileResource>
  */
-class ManualIndexPage extends IndexPage
+class ManualFileIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
 
@@ -35,13 +35,12 @@ class ManualIndexPage extends IndexPage
         return [
             ID::make()->sortable(),
             BelongsTo::make(
-                'Device Model',
-                'deviceModel',
-                fn($item) => $item->name,
-                DeviceModelResource::class
+                'Manual',
+                'manual',
+                fn($item) => $item->title,
+                ManualResource::class
             )->sortable(),
-            Text::make('Title')->sortable(),
-            Text::make('Language')->sortable(),
+            Text::make('File URL', 'file_url')->sortable(),
             Date::make('Created At', 'created_at')->format('Y-m-d H:i:s')->sortable(),
             Date::make('Updated At', 'updated_at')->format('Y-m-d H:i:s')->sortable(),
         ];

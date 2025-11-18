@@ -2,29 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\Manual\Pages;
+namespace App\MoonShine\Resources\ManualFile\Pages;
 
-use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
+use App\MoonShine\Resources\Manual\ManualResource;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
-use App\MoonShine\Resources\Manual\ManualResource;
 use App\MoonShine\Resources\ManualFile\ManualFileResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Support\ListOf;
-use MoonShine\UI\Fields\File;
+use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
-use MoonShine\UI\Fields\Date;
 use Throwable;
 
 
 /**
- * @extends DetailPage<ManualResource>
+ * @extends DetailPage<ManualFileResource>
  */
-class ManualDetailPage extends DetailPage
+class ManualFileDetailPage extends DetailPage
 {
     /**
      * @return list<FieldContract>
@@ -33,26 +30,14 @@ class ManualDetailPage extends DetailPage
     {
         return [
             ID::make(),
-            BelongsTo::make(
-                'Device Model',
-                'deviceModel',
-                fn($item) => $item->name,
-                DeviceModelResource::class
-            ),
-            Text::make('Title'),
-            Text::make('Language'),
 
-            HasMany::make('Files', 'files', null, ManualFileResource::class)
-                ->fields([
-                    ID::make()->sortable(),
-                    File::make('Manual File', 'file_url')
-                        ->disk('public')
-                        ->dir('manuals/files')
-                        ->allowedExtensions(['pdf'])
-                        ->removable(),
-                    Date::make('Created At', 'created_at')->format('Y-m-d H:i:s')->sortable(),
-                    Date::make('Updated At', 'updated_at')->format('Y-m-d H:i:s')->sortable(),
-                ]),
+            BelongsTo::make(
+                'Manual',
+                'manual',
+                fn($item) => $item->title,
+                resource: ManualResource::class
+            ),
+            Text::make('File URL', 'file_url'),
             Date::make('Created At', 'created_at')->format('Y-m-d H:i:s'),
             Date::make('Updated At', 'updated_at')->format('Y-m-d H:i:s'),
         ];

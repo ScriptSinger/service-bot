@@ -16,7 +16,7 @@ use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use App\MoonShine\Resources\Manual\ManualResource;
 use App\MoonShine\Resources\TestMode\TestModeResource;
 use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
-
+use App\MoonShine\Resources\ManualFile\ManualFileResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -43,6 +43,7 @@ final class MoonShineLayout extends AppLayout
             MenuItem::make(TestModeResource::class, 'TestModes'),
             MenuItem::make(ErrorCodeResource::class, 'ErrorCodes'),
 
+            MenuItem::make(ManualFileResource::class, 'ManualFiles'),
         ];
     }
 

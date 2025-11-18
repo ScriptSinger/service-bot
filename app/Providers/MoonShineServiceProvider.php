@@ -16,6 +16,7 @@ use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use App\MoonShine\Resources\Manual\ManualResource;
 use App\MoonShine\Resources\TestMode\TestModeResource;
 use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
+use App\MoonShine\Resources\ManualFile\ManualFileResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -34,6 +35,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 ManualResource::class,
                 TestModeResource::class,
                 ErrorCodeResource::class,
+                ManualFileResource::class,
             ])
             ->pages([
                 ...$core->getConfig()->getPages(),

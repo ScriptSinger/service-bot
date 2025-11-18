@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('manuals', function (Blueprint $table) {
+        Schema::create('manual_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('device_model_id')->constrained('device_models')->onDelete('cascade');
-            $table->string('title');
-            $table->string('language', 10)->nullable();
+            $table->foreignId('manual_id')->constrained()->cascadeOnDelete();
+            $table->string('file_url');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('manuals');
+        Schema::dropIfExists('manual_files');
     }
 };

@@ -1,0 +1,84 @@
+{
+    "update_id": 883182559,
+    "callback_query": {
+        "id": "1725483005062061828",
+        "from": {
+            "id": 401745318,
+            "is_bot": false,
+            "first_name": "Heturion",
+            "username": "heturion",
+            "language_code": "ru"
+        },
+        "message": {
+            "message_id": 131,
+            "from": {
+                "id": 6523028067,
+                "is_bot": true,
+                "first_name": "heturion",
+                "username": "heturionBot"
+            },
+            "chat": {
+                "id": 401745318,
+                "first_name": "Heturion",
+                "username": "heturion",
+                "type": "private"
+            },
+            "date": 1763447784,
+            "text": "Выберите тип устройства:",
+            "reply_markup": {
+                "inline_keyboard": [
+                    [
+                        {
+                            "text": "Духовой шкаф",
+                            "callback_data": "device_type:oven"
+                        }
+                    ],
+                    [
+                        {
+                            "text": "Кондиционер",
+                            "callback_data": "device_type:air-conditioner"
+                        }
+                    ],
+                    [
+                        {
+                            "text": "Микроволновка",
+                            "callback_data": "device_type:microwave"
+                        }
+                    ],
+                    [
+                        {
+                            "text": "Посудомоечная машина",
+                            "callback_data": "device_type:dishwasher"
+                        }
+                    ],
+                    [
+                        {
+                            "text": "Стиральная машина",
+                            "callback_data": "device_type:washing-machine"
+                        }
+                    ],
+                    [
+                        {
+                            "text": "Сушильная машина",
+                            "callback_data": "device_type:dryer"
+                        }
+                    ],
+                    [
+                        {
+                            "text": "Телевизор",
+                            "callback_data": "device_type:tv"
+                        }
+                    ],
+                    [
+                        {
+                            "text": "Холодильник",
+                            "callback_data": "device_type:refrigerator"
+                        }
+                    ]
+                ]
+            }
+        },
+        "chat_instance": "-4106721934590204153",
+        "data": "device_type:refrigerator"
+    }
+}
