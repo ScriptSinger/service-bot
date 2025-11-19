@@ -2,25 +2,62 @@
 
 namespace App\Services\Telegram;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+
 class KeyboardBuilder
 {
-    public function deviceTypes($deviceTypes): array
+    /**
+     * Кнопки для выбора типов устройств
+     */
+    public function deviceTypes($types): array
     {
-        $rows = [];
-        foreach ($deviceTypes as $dt) {
-            $rows[] = [['text' => $dt->name, 'callback_data' => 'device_type:' . $dt->slug]];
+        // Если передана Collection, преобразуем в массив
+        if ($types instanceof \Illuminate\Support\Collection) {
+            $types = $types->toArray();
         }
 
-        return ['inline_keyboard' => $rows];
+        $buttons = array_map(fn($t) => [
+            'text' => $t['name'],
+            'callback_data' => "device_type:{$t['id']}"
+        ], $types);
+
+        return ['inline_keyboard' => array_chunk($buttons, 2)];
     }
 
-    public function brands($brands): array
+    /**
+     * Кнопки для выбора брендов
+     */
+    public function brands(Collection|array $brands): array
     {
-        $rows = [];
-        foreach ($brands as $b) {
-            $rows[] = [['text' => $b->name, 'callback_data' => 'brand_show:' . $b->id]];
+        $buttons = collect($brands)
+            ->map(fn($b) => [
+                'text' => $b['name'],
+                'callback_data' => "brand_show:{$b['id']}"
+            ])
+            ->chunk(2)
+            ->map(fn($chunk) => array_values($chunk->toArray())) // <- вот эта строчка
+            ->values() // <- чтобы ключи массива стали 0,1,2...
+            ->toArray();
+
+        $keyboard = ['inline_keyboard' => $buttons];
+
+        Log::info('KeyboardBuilder output:', ['keyboard' => $keyboard]);
+
+        return $keyboard;
+    }
+
+    public function deviceModels($models): array
+    {
+        if ($models instanceof \Illuminate\Support\Collection) {
+            $models = $models->toArray();
         }
 
-        return ['inline_keyboard' => $rows];
+        $buttons = array_map(fn($m) => [
+            'text' => $m['name'],
+            'callback_data' => "manuals_for_model:{$m['id']}" // новый callback для мануалов
+        ], $models);
+
+        return ['inline_keyboard' => array_chunk($buttons, 2)];
     }
 }

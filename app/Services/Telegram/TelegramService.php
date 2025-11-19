@@ -5,6 +5,7 @@ namespace App\Services\Telegram;
 use App\Services\Telegram\Handlers\StartHandler;
 use App\Services\Telegram\Handlers\DeviceTypeHandler;
 use App\Services\Telegram\Handlers\BrandHandler;
+use App\Services\Telegram\Handlers\ManualHandler;
 
 class TelegramService
 {
@@ -17,6 +18,7 @@ class TelegramService
             'start' => StartHandler::class,
             'device_type' => DeviceTypeHandler::class,
             'brand_show' => BrandHandler::class,
+            'manuals_for_model' => ManualHandler::class, // добавили
         ];
     }
 

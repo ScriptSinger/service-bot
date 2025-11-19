@@ -3,6 +3,7 @@
 namespace App\Services\Telegram;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TelegramApi
 {
@@ -21,8 +22,10 @@ class TelegramApi
             'text' => $text,
         ];
 
+        Log::info('Sending message to chat ' . $chatId . ': ' . $text);
+
         if ($replyMarkup) {
-            $payload['reply_markup'] = $replyMarkup;
+            $payload['reply_markup'] = json_encode($replyMarkup);
         }
 
         Http::post($this->baseUrl . 'sendMessage', $payload);

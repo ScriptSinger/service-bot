@@ -2,29 +2,31 @@
 
 namespace App\Services\Telegram\Handlers;
 
-use App\Services\Domain\BrandService;
+use App\Services\Domain\DeviceModelService;
+use App\Services\Telegram\KeyboardBuilder;
 use App\Services\Telegram\TelegramApi;
 
 class BrandHandler
 {
-    protected BrandService $brandService;
+    protected DeviceModelService $modelService;
+    protected KeyboardBuilder $kb;
     protected TelegramApi $api;
 
-    public function __construct(BrandService $brandService, TelegramApi $api)
+    public function __construct(DeviceModelService $modelService, KeyboardBuilder $kb, TelegramApi $api)
     {
-        $this->brandService = $brandService;
+        $this->modelService = $modelService;
+        $this->kb = $kb;
         $this->api = $api;
     }
 
-    public function handle(array $callback, ?string $payload = null): void
+    public function handle(array $callbackQuery, $brandId): void
     {
-        // payload = brand id
-        $chatId = $callback['message']['chat']['id'];
+        $chatId = $callbackQuery['message']['chat']['id'];
 
-        $brand = $this->brandService->getById($payload);
+        $models = $this->modelService->getByBrand($brandId);
 
-        $text = "Бренд: {$brand->name}\nОписание: " . ($brand->description ?? '—');
+        $replyMarkup = $this->kb->deviceModels($models);
 
-        $this->api->sendMessage($chatId, $text);
+        $this->api->sendMessage($chatId, 'Выберите модель:', $replyMarkup);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services\Telegram\Handlers;
 use App\Services\Domain\BrandService;
 use App\Services\Telegram\KeyboardBuilder;
 use App\Services\Telegram\TelegramApi;
+use Illuminate\Support\Facades\Log;
 
 class DeviceTypeHandler
 {
@@ -24,7 +25,8 @@ class DeviceTypeHandler
         // payload = slug устройства
         $chatId = $callback['message']['chat']['id'];
 
-        $brands = $this->brandService->getByDeviceTypeSlug($payload);
+        $brands = $this->brandService->getByDeviceTypeId((int)$payload);
+        Log::info('Brands for device type ' . $payload . ': ' . json_encode($brands));
 
         $replyMarkup = $this->kb->brands($brands);
 
