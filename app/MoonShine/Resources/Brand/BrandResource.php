@@ -23,6 +23,8 @@ class BrandResource extends ModelResource
 
     protected string $title = 'Brands';
 
+
+
     public function fields(): array
     {
         return [

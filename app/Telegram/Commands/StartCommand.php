@@ -5,6 +5,7 @@ namespace App\Telegram\Commands;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Keyboard\Keyboard;
 use App\Models\DeviceType;
+use App\Telegram\Helpers;
 
 class StartCommand extends Command
 {
@@ -13,6 +14,10 @@ class StartCommand extends Command
 
     public function handle()
     {
+
+        $user = $this->getUpdate()->getMessage()->from;
+        Helpers::logUser($user);
+
         $types = DeviceType::orderBy('name')->get();
 
         $keyboard = Keyboard::make()->inline();

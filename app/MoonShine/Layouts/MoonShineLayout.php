@@ -17,6 +17,8 @@ use App\MoonShine\Resources\Manual\ManualResource;
 use App\MoonShine\Resources\TestMode\TestModeResource;
 use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
 use App\MoonShine\Resources\ManualFile\ManualFileResource;
+use App\MoonShine\Resources\TelegramUser\TelegramUserResource;
+use MoonShine\MenuManager\MenuGroup;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -36,14 +38,18 @@ final class MoonShineLayout extends AppLayout
     {
         return [
             ...parent::menu(),
-            MenuItem::make(DeviceTypeResource::class, 'DeviceTypes'),
-            MenuItem::make(BrandResource::class, 'Brands'),
-            MenuItem::make(DeviceModelResource::class, 'DeviceModels'),
-            MenuItem::make(ManualResource::class, 'Manuals'),
-            MenuItem::make(TestModeResource::class, 'TestModes'),
-            MenuItem::make(ErrorCodeResource::class, 'ErrorCodes'),
 
-            MenuItem::make(ManualFileResource::class, 'ManualFiles'),
+            MenuGroup::make('Devices', [
+                MenuItem::make(DeviceTypeResource::class, 'DeviceTypes'),
+                MenuItem::make(BrandResource::class, 'Brands'),
+                MenuItem::make(DeviceModelResource::class, 'DeviceModels'),
+                MenuItem::make(ManualResource::class, 'Manuals'),
+                MenuItem::make(TestModeResource::class, 'TestModes'),
+                MenuItem::make(ErrorCodeResource::class, 'ErrorCodes'),
+                MenuItem::make(ManualFileResource::class, 'ManualFiles'),
+            ]),
+
+            MenuItem::make(TelegramUserResource::class, 'TelegramUsers'),
         ];
     }
 
