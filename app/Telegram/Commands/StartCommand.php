@@ -5,6 +5,7 @@ namespace App\Telegram\Commands;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Keyboard\Keyboard;
 use App\Models\DeviceType;
+use App\Services\Telegram\TelegramUserService;
 use App\Telegram\Helpers;
 
 class StartCommand extends Command
@@ -14,9 +15,12 @@ class StartCommand extends Command
 
     public function handle()
     {
+        $from = $this->update->getMessage()->from;
 
-        $user = $this->getUpdate()->getMessage()->from;
-        Helpers::logUser($user);
+        TelegramUserService::syncUser($from);
+        TelegramUserService::syncAvatar($from->id);
+
+
 
         $types = DeviceType::orderBy('name')->get();
 

@@ -12,5 +12,7 @@ class TelegramUser extends Model
         'first_name',
         'last_name',
         'language_code',
+        'avatar_path',
+        'last_activity',
     ];
 }

@@ -13,6 +13,7 @@ use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\TelegramUser\TelegramUserResource;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Text;
 use Throwable;
 
@@ -32,6 +33,8 @@ class TelegramUserIndexPage extends IndexPage
         return [
             ID::make(),
             Text::make('Telegram ID', 'telegram_id')->sortable(),
+            Image::make('Avatar', 'avatar_path')
+                ->disk('public'),
             Text::make('First Name', 'first_name')->sortable(),
             Text::make('Username', 'username')->sortable(),
             Text::make('Language Code', 'language_code')->sortable(),
