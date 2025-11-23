@@ -2,10 +2,10 @@
 
 namespace App\Telegram\Callbacks;
 
-use Telegram\Bot\Facades\Telegram;
 use App\Models\DeviceModel;
 use App\Models\TestMode;
-use App\Telegram\Keyboard;
+use Telegram\Bot\Keyboard\Keyboard;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TestModeCallback
 {

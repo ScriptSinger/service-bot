@@ -18,6 +18,7 @@ use App\MoonShine\Resources\TestMode\TestModeResource;
 use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
 use App\MoonShine\Resources\ManualFile\ManualFileResource;
 use App\MoonShine\Resources\TelegramUser\TelegramUserResource;
+use App\MoonShine\Resources\User\UserResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 ErrorCodeResource::class,
                 ManualFileResource::class,
                 TelegramUserResource::class,
+                UserResource::class,
             ])
             ->pages([
                 ...$core->getConfig()->getPages(),

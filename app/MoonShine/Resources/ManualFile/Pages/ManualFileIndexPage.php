@@ -17,6 +17,7 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
 
@@ -34,6 +35,9 @@ class ManualFileIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
+            Text::make('Title'),
+            Textarea::make('Description'),
+            Text::make('Language'),
             BelongsTo::make(
                 'Manual',
                 'manual',

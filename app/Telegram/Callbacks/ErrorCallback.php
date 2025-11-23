@@ -2,9 +2,9 @@
 
 namespace App\Telegram\Callbacks;
 
-use App\Telegram\Keyboard;
 use App\Models\DeviceModel;
 use App\Models\ErrorCode;
+use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class ErrorCallback

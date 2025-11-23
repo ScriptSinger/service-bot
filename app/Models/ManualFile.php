@@ -8,6 +8,8 @@ class ManualFile extends Model
 {
     protected $fillable = [
         'manual_id',
+        'title',
+        'description',
         'file_url',
     ];
 

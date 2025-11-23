@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Manual extends Model
 {
     protected $fillable = [
-        'device_model_id',
-        'title',
-        'language',
+        'device_model_id'
     ];
 
     public function deviceModel()

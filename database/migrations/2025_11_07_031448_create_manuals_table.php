@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('manuals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_model_id')->constrained('device_models')->onDelete('cascade');
-            $table->string('title');
-            $table->string('language', 10)->nullable();
             $table->timestamps();
         });
     }

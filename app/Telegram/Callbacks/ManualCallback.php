@@ -8,39 +8,61 @@ use App\Models\Manual;
 
 class ManualCallback
 {
-    public static function handle($callback, $data)
+    /**
+     * Обработка callback для мануалов
+     *
+     * @param \Telegram\Bot\Objects\CallbackQuery $callback
+     * @param array $data
+     * @return void
+     */
+    public function handle($callback, array $data): void
     {
-        $chatId = $callback->getMessage()->getChat()->id;
-        $manualId = $data[1];
+        $chatId = $callback->message->chat->id;
+        $manualId = $data[1] ?? null;
 
         $manual = Manual::with('files')->find($manualId);
 
-        if (!$manual) {
-            return Telegram::answerCallbackQuery([
+        if (!$manual || $manual->files->isEmpty()) {
+            Telegram::answerCallbackQuery([
                 'callback_query_id' => $callback->id,
-                'text' => 'Manual not found',
+                'text' => 'Мануал или файлы не найдены',
                 'show_alert' => true,
             ]);
+            return;
         }
 
-        // Клавиатура
+        // Формируем клавиатуру с файлами
         $keyboard = Keyboard::make()->inline();
-
         foreach ($manual->files as $file) {
+            $label = $file->title ?? '📄 Скачать файл';
+            if (!empty($file->language)) {
+                $label .= " ({$file->language})";
+            }
             $keyboard->row([
                 Keyboard::inlineButton([
-                    'text' => '📄 Скачать файл',
-                    // 'url'  => url($file->file_url),   // ← ПРАВИЛЬНО
+                    'text' => $label,
                     'url' => asset('storage/' . $file->file_url)
-
-                ]),
+                ])
             ]);
         }
 
-        return Telegram::editMessageText([
+        // Кнопка «Назад» возвращает к модели
+        if ($manual->deviceModel) {
+            $keyboard->row([
+                Keyboard::inlineButton([
+                    'text' => '⬅️ Назад',
+                    'callback_data' => "back_to_model:{$manual->deviceModel->id}"
+                ])
+            ]);
+        }
+
+        // Заголовок берём просто как "Мануал для модели" (title теперь в файлах)
+        $text = "📘 Мануал для модели: {$manual->deviceModel->name}";
+
+        Telegram::editMessageText([
             'chat_id' => $chatId,
-            'message_id' => $callback->getMessage()->message_id, // ← ПРАВИЛЬНО
-            'text' => "📘 Мануал: {$manual->title}\n\nВыберите файл для скачивания:",
+            'message_id' => $callback->message->message_id,
+            'text' => $text . "\n\nВыберите файл для скачивания:",
             'reply_markup' => $keyboard
         ]);
     }

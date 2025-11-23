@@ -40,8 +40,6 @@ class ManualIndexPage extends IndexPage
                 fn($item) => $item->name,
                 DeviceModelResource::class
             )->sortable(),
-            Text::make('Title')->sortable(),
-            Text::make('Language')->sortable(),
             Date::make('Created At', 'created_at')->format('Y-m-d H:i:s')->sortable(),
             Date::make('Updated At', 'updated_at')->format('Y-m-d H:i:s')->sortable(),
         ];

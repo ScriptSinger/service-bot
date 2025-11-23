@@ -39,9 +39,6 @@ class ManualDetailPage extends DetailPage
                 fn($item) => $item->name,
                 DeviceModelResource::class
             ),
-            Text::make('Title'),
-            Text::make('Language'),
-
             HasMany::make('Files', 'files', null, ManualFileResource::class)
                 ->fields([
                     ID::make()->sortable(),

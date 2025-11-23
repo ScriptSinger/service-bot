@@ -17,14 +17,38 @@ class DeviceTypeCallback
      * @param array $data
      * @return void
      */
-    public static function handle(CallbackQuery $callback, array $data)
+    public function handle(CallbackQuery $callback, array $data)
     {
         $chatId = $callback->message->chat->id;
 
-        // Извлекаем выбранный тип устройства
+        // Извлекаем выбранный тип устройства, если есть
         $typeId = $data[1] ?? null;
-        $deviceType = DeviceType::find($typeId);
 
+        // Если это возврат по кнопке «Назад», просто показываем все DeviceType
+        if ($data[0] === 'back_to_type' || !$typeId) {
+            $deviceTypes = DeviceType::orderBy('name')->get();
+
+            $keyboard = Keyboard::make()->inline();
+            foreach ($deviceTypes as $type) {
+                $keyboard->row([
+                    Keyboard::inlineButton([
+                        'text' => $type->name,
+                        'callback_data' => "type:{$type->id}"
+                    ])
+                ]);
+            }
+
+            Telegram::editMessageText([
+                'chat_id' => $chatId,
+                'message_id' => $callback->message->message_id,
+                'text' => 'Выберите тип устройства:',
+                'reply_markup' => $keyboard
+            ]);
+            return;
+        }
+
+        // Ищем выбранный DeviceType
+        $deviceType = DeviceType::find($typeId);
         if (!$deviceType) {
             Telegram::answerCallbackQuery([
                 'callback_query_id' => $callback->id,
@@ -37,9 +61,7 @@ class DeviceTypeCallback
         // Получаем бренды для выбранного типа устройства
         $brands = $deviceType->brands()->orderBy('name')->get();
 
-        // Формируем клавиатуру
         $keyboard = Keyboard::make()->inline();
-
         foreach ($brands as $brand) {
             $keyboard->row([
                 Keyboard::inlineButton([
@@ -49,15 +71,14 @@ class DeviceTypeCallback
             ]);
         }
 
-        // Добавляем кнопку "Назад"
+        // Кнопка «Назад» возвращает на список типов
         $keyboard->row([
             Keyboard::inlineButton([
-                'text' => 'Назад',
-                'callback_data' => 'back'
+                'text' => '⬅️ Назад',
+                'callback_data' => 'back_to_type'
             ])
         ]);
 
-        // Редактируем сообщение с новой клавиатурой
         Telegram::editMessageText([
             'chat_id' => $chatId,
             'message_id' => $callback->message->message_id,

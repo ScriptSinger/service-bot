@@ -2,28 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\ManualFile\Pages;
+namespace App\MoonShine\Resources\User\Pages;
 
-use App\MoonShine\Resources\Manual\ManualResource;
-use MoonShine\Laravel\Pages\Crud\DetailPage;
+use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
-use App\MoonShine\Resources\ManualFile\ManualFileResource;
-use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use MoonShine\Support\ListOf;
-use MoonShine\UI\Fields\Date;
+use MoonShine\Laravel\QueryTags\QueryTag;
+use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
-use MoonShine\UI\Fields\Text;
-use MoonShine\UI\Fields\Textarea;
+use App\MoonShine\Resources\User\UserResource;
+use MoonShine\Support\ListOf;
 use Throwable;
 
 
 /**
- * @extends DetailPage<ManualFileResource>
+ * @extends IndexPage<UserResource>
  */
-class ManualFileDetailPage extends DetailPage
+class UserIndexPage extends IndexPage
 {
+    protected bool $isLazy = true;
+
     /**
      * @return list<FieldContract>
      */
@@ -31,18 +30,6 @@ class ManualFileDetailPage extends DetailPage
     {
         return [
             ID::make(),
-            Text::make('Title'),
-            Textarea::make('Description'),
-            Text::make('Language'),
-            BelongsTo::make(
-                'Manual',
-                'manual',
-                fn($item) => $item->title,
-                resource: ManualResource::class
-            ),
-            Text::make('File URL', 'file_url'),
-            Date::make('Created At', 'created_at')->format('Y-m-d H:i:s'),
-            Date::make('Updated At', 'updated_at')->format('Y-m-d H:i:s'),
         ];
     }
 
@@ -52,11 +39,35 @@ class ManualFileDetailPage extends DetailPage
     }
 
     /**
+     * @return list<FieldContract>
+     */
+    protected function filters(): iterable
+    {
+        return [];
+    }
+
+    /**
+     * @return list<QueryTag>
+     */
+    protected function queryTags(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return list<Metric>
+     */
+    protected function metrics(): array
+    {
+        return [];
+    }
+
+    /**
      * @param  TableBuilder  $component
      *
      * @return TableBuilder
      */
-    protected function modifyDetailComponent(ComponentContract $component): ComponentContract
+    protected function modifyListComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }

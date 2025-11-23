@@ -2,17 +2,7 @@
 
 namespace App\Telegram;
 
-use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\CallbackQuery;
-use App\Telegram\Callbacks\{
-    DeviceTypeCallback,
-    BrandCallback,
-    ModelCallback,
-    ManualCallback,
-    ErrorCallback,
-    TestModeCallback
-};
-use Illuminate\Support\Facades\Log;
 
 class CallbackRouter
 {
@@ -21,26 +11,17 @@ class CallbackRouter
         $data = explode(':', $callback->data);
         $command = $data[0];
 
+        $handlerClass = CallbackRegistry::$map[$command] ?? null;
 
-        $handler = match ($command) {
-            'type' => DeviceTypeCallback::class,
-            'brand' => BrandCallback::class,
-            'model' => ModelCallback::class,
-            'manual' => ManualCallback::class,
-            'manual_file' => ManualCallback::class,
-            'manual_file_list' => ManualCallback::class,
-            'back_to_model' => ModelCallback::class,
-            default => null,
-        };
-
-        if (!$handler) {
-
-            return Telegram::answerCallbackQuery([
-                'callback_query_id' => $callback->id,
-                'text' => 'Unknown command'
-            ]);
+        if (!$handlerClass) {
+            // если команда не найдена, используем ErrorCallback
+            $handlerClass = CallbackRegistry::$map['error'];
         }
 
-        return $handler::handle($callback, $data);
+        // создаём экземпляр обработчика через контейнер Laravel
+        $handler = app($handlerClass);
+
+        // вызываем экземплярный метод handle()
+        return $handler->handle($callback, $data);
     }
 }

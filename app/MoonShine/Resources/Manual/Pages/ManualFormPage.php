@@ -22,6 +22,7 @@ use MoonShine\UI\Fields\File;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Date;
+use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
 
@@ -46,15 +47,13 @@ class ManualFormPage extends FormPage
                     DeviceModelResource::class
                 ),
 
-                Text::make('Title', 'title'),
-
-                Select::make('Language', 'language')
-                    ->options([null => 'No language'] + config('languages'))
-                    ->nullable(),
 
                 HasMany::make('Files', 'files', null, ManualFileResource::class)
                     ->fields([
                         ID::make()->sortable(),
+                        Text::make('Title', 'title'),
+                        Textarea::make('Description'),
+                        Text::make('Language', 'language'),
 
                         File::make('File', 'file_url')
                             ->disk('public')

@@ -2,27 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\ManualFile\Pages;
+namespace App\MoonShine\Resources\User\Pages;
 
-use App\MoonShine\Resources\Manual\ManualResource;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
-use App\MoonShine\Resources\ManualFile\ManualFileResource;
-use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use App\MoonShine\Resources\User\UserResource;
 use MoonShine\Support\ListOf;
-use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
-use MoonShine\UI\Fields\Text;
-use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
 
 /**
- * @extends DetailPage<ManualFileResource>
+ * @extends DetailPage<UserResource>
  */
-class ManualFileDetailPage extends DetailPage
+class UserDetailPage extends DetailPage
 {
     /**
      * @return list<FieldContract>
@@ -31,18 +26,6 @@ class ManualFileDetailPage extends DetailPage
     {
         return [
             ID::make(),
-            Text::make('Title'),
-            Textarea::make('Description'),
-            Text::make('Language'),
-            BelongsTo::make(
-                'Manual',
-                'manual',
-                fn($item) => $item->title,
-                resource: ManualResource::class
-            ),
-            Text::make('File URL', 'file_url'),
-            Date::make('Created At', 'created_at')->format('Y-m-d H:i:s'),
-            Date::make('Updated At', 'updated_at')->format('Y-m-d H:i:s'),
         ];
     }
 

@@ -2,31 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\ManualFile\Pages;
+namespace App\MoonShine\Resources\User\Pages;
 
-use App\MoonShine\Resources\Manual\ManualResource;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
-use App\MoonShine\Resources\ManualFile\ManualFileResource;
-use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use App\MoonShine\Resources\User\UserResource;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
-use MoonShine\UI\Fields\File;
-use MoonShine\UI\Fields\Select;
-use MoonShine\UI\Fields\Text;
-use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
 
 /**
- * @extends FormPage<ManualFileResource>
+ * @extends FormPage<UserResource>
  */
-class ManualFileFormPage extends FormPage
+class UserFormPage extends FormPage
 {
     /**
      * @return list<ComponentContract|FieldContract>
@@ -36,25 +30,6 @@ class ManualFileFormPage extends FormPage
         return [
             Box::make([
                 ID::make(),
-                BelongsTo::make(
-                    'Manual',
-                    'manual',
-                    fn($item) => $item->id,
-                    ManualResource::class
-                )
-                    ->required(),
-                Text::make('Title', 'title'),
-                Textarea::make('Description'),
-                Select::make('Language', 'language')
-                    ->options([null => 'No language'] + config('languages'))
-                    ->nullable(),
-
-                File::make('File', 'file_url')
-                    ->disk('public')
-                    ->dir('manuals/files')
-                    ->allowedExtensions(['pdf'])
-                    ->removable()
-                    ->required(),
             ]),
         ];
     }
