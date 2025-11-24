@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('username')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('language_code', 5)->nullable();
+            $table->string('language_code', 10)->nullable();
             $table->string('avatar_path')->nullable();
             $table->timestamp('last_activity')->nullable();
             $table->timestamps();

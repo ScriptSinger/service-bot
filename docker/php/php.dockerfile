@@ -21,7 +21,14 @@ RUN apk add --no-cache \
     zip \
     unzip \
     libzip-dev \
-    && docker-php-ext-install zip pdo pdo_mysql
+    autoconf \
+    gcc \
+    g++ \
+    make \
+    && docker-php-ext-install zip pdo pdo_mysql \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del autoconf gcc g++ make   # удаляем временные инструменты для уменьшения
 
 EXPOSE 9000
 CMD ["php-fpm"]

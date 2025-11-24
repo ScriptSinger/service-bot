@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TelegramUser extends Model
 {
@@ -15,4 +16,12 @@ class TelegramUser extends Model
         'avatar_path',
         'last_activity',
     ];
+
+    public function broadcastMessages(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            BroadcastMessage::class,   // связанная модель
+            'broadcast_message_user'   // промежуточная таблица
+        );
+    }
 }

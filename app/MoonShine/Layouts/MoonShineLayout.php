@@ -19,6 +19,7 @@ use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
 use App\MoonShine\Resources\ManualFile\ManualFileResource;
 use App\MoonShine\Resources\TelegramUser\TelegramUserResource;
 use MoonShine\MenuManager\MenuGroup;
+use App\MoonShine\Resources\BroadcastMessage\BroadcastMessageResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -50,6 +51,7 @@ final class MoonShineLayout extends AppLayout
             ]),
 
             MenuItem::make(TelegramUserResource::class, 'TelegramUsers'),
+            MenuItem::make(BroadcastMessageResource::class, 'BroadcastMessages'),
         ];
     }
 
