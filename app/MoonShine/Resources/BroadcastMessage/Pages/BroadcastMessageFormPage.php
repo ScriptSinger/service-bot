@@ -35,36 +35,9 @@ class BroadcastMessageFormPage extends FormPage
     /**
      * @return list<ComponentContract|FieldContract>
      */
-    protected function fields(): iterable
-    {
-        return [
-            Box::make('Broadcast Message Details', [
-                ID::make()->readonly(),
 
-                Textarea::make('Message', 'message')
-                    ->required()
-                    ->hint('Текст сообщения для рассылки'),
 
-                Text::make('Status', 'status')
-                    ->readonly()
-                    ->hint('Статус рассылки зависит от очереди'),
 
-                Number::make('Receivers Count', 'receivers_count')
-                    ->readonly()
-                    ->hint('Количество выбранных получателей'),
-
-                BelongsToMany::make(
-                    'Receivers',
-                    'telegramUsers',
-                    fn($item) => $item->name,
-                    TelegramUserResource::class
-                )
-                    ->nullable()
-                    ->searchable()
-                    ->hint('Выберите пользователей для рассылки'),
-            ]),
-        ];
-    }
 
     protected function buttons(): ListOf
     {

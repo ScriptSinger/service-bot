@@ -28,16 +28,7 @@ class BroadcastMessageIndexPage extends IndexPage
     /**
      * @return list<FieldContract>
      */
-    protected function fields(): iterable
-    {
-        return [
-            ID::make(),
-            Text::make('Message', 'message'),
-            Text::make('Status', 'status'),
-            Text::make('Receivers Count', 'receivers_count'),
 
-        ];
-    }
 
     protected function buttons(): ListOf
     {

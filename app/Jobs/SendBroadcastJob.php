@@ -20,35 +20,42 @@ class SendBroadcastJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $broadcast;
-    protected $users;
+    protected int $broadcastId;
+    protected array $users;
 
-    public function __construct($broadcast, $users)
+    public function __construct(int $broadcastId, array $users)
     {
-        $this->broadcast = $broadcast;
+        $this->broadcastId = $broadcastId;
         $this->users = $users;
     }
 
     public function handle(): void
     {
+        $broadcast = BroadcastMessage::findOrFail($this->broadcastId);
+
         $api = new Api(config('telegram.bots.mybot.token'));
         $results = [];
 
         $users = TelegramUser::whereIn('id', $this->users)->get();
+
         foreach ($users as $user) {
             try {
                 $api->sendMessage([
                     'chat_id' => $user->telegram_id,
-                    'text' => $this->broadcast->message,
+                    'text' => $broadcast->message,
                 ]);
 
                 $results[] = ['id' => $user->id, 'status' => 'ok'];
             } catch (Throwable $e) {
-                $results[] = ['id' => $user->id, 'status' => 'error', 'error' => $e->getMessage()];
+                $results[] = [
+                    'id'     => $user->id,
+                    'status' => 'error',
+                    'error'  => $e->getMessage(),
+                ];
             }
         }
 
-        $this->broadcast->update([
+        $broadcast->update([
             'status' => 'sent',
             'result' => $results,
         ]);

@@ -20,8 +20,5 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        BroadcastMessage::observe(BroadcastMessageObserver::class);
-    }
+    public function boot(): void {}
 }
