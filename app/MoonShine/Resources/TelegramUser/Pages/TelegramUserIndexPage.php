@@ -28,18 +28,7 @@ class TelegramUserIndexPage extends IndexPage
     /**
      * @return list<FieldContract>
      */
-    protected function fields(): iterable
-    {
-        return [
-            ID::make(),
-            Text::make('Telegram ID', 'telegram_id')->sortable(),
-            Image::make('Avatar', 'avatar_path')
-                ->disk('public'),
-            Text::make('First Name', 'first_name')->sortable(),
-            Text::make('Username', 'username')->sortable(),
-            Text::make('Language Code', 'language_code')->sortable(),
-        ];
-    }
+
 
     protected function buttons(): ListOf
     {
