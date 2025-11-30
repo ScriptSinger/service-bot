@@ -15,13 +15,13 @@ Route::get('/user', function (Request $request) {
 
 
 
-Route::prefix('v1')->group(function () {
-    Route::get('/device-types', [DeviceTypeController::class, 'index']);
-    Route::get('/brands/{id}/models', [DeviceModelController::class, 'index']);
-    Route::get('/models/{deviceModel}', [DeviceModelController::class, 'show']);
-    Route::get('/models/{id}/manuals', [ManualController::class, 'index']);
-    Route::get('/models/{id}/error-codes', [ErrorCodeController::class, 'index']);
-});
+// Route::prefix('v1')->group(function () {
+//     Route::get('/device-types', [DeviceTypeController::class, 'index']);
+//     Route::get('/brands/{id}/models', [DeviceModelController::class, 'index']);
+//     Route::get('/models/{deviceModel}', [DeviceModelController::class, 'show']);
+//     Route::get('/models/{id}/manuals', [ManualController::class, 'index']);
+//     Route::get('/models/{id}/error-codes', [ErrorCodeController::class, 'index']);
+// });
 
 Route::post('/telegram/webhook', function (Request $request) {
 
