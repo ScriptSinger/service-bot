@@ -89,10 +89,10 @@ jobs:
 
             tar -xzf /tmp/release.tar.gz -C .
 
-            # Write .env from GitHub Secret
-            cat > .env << EENV
-          ${{ secrets.ENV_FILE }}
-                EENV
+
+            cat > .env << 'EENV'
+           ${{ secrets.ENV_FILE }}
+            EENV
 
                docker compose down
                docker compose up -d --build
