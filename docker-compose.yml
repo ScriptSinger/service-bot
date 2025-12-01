@@ -76,7 +76,7 @@ volumes:
   db_data:
 
 networks:
-  laravel:
+  ufamasters_laravel:
     external: true
 # networks:
 #   laravel:
