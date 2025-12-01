@@ -18,6 +18,8 @@ services:
       - php
     networks:
       - laravel
+      - ufamasters_laravel
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.archivarius.rule=Host(`archivarius.ufamasters.ru`)"
@@ -74,10 +76,8 @@ services:
 
 volumes:
   db_data:
-
 networks:
   ufamasters_laravel:
-    external: true
-# networks:
-#   laravel:
-#     driver: bridge
+    external: true # сеть первого окружения
+  laravel:
+    driver: bridge
