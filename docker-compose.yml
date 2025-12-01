@@ -3,8 +3,6 @@ services:
     build:
       context: .
       dockerfile: docker/composer/composer.dockerfile
-
-    user: "${UID}:${GID}"
     volumes:
       - ./:/var/www/html
     working_dir: /var/www/html
@@ -83,8 +81,10 @@ services:
 
 volumes:
   db_data:
+
 networks:
   ufamasters_laravel:
     external: true # сеть первого окружения
+
   laravel:
     driver: bridge

@@ -89,11 +89,17 @@ jobs:
             cd ~/archivarius
 
             tar -xzf /tmp/release.tar.gz -C .
+
             echo "${{ secrets.ENV_FILE }}" > .env
 
-               docker compose down
-               docker compose up -d --build
+              docker compose down
+              docker system prune -af
+              docker compose up -d --build
 
-               docker compose run --rm php php artisan migrate --force
-               docker compose run --rm php php artisan optimize
+              docker compose run --rm php php artisan config:clear
+              docker compose run --rm php php artisan cache:clear
+              docker compose run --rm php php artisan config:cache
+              docker compose run --rm php php artisan migrate --force
+              docker compose run --rm php php artisan optimize
+
           EOF
