@@ -39,16 +39,19 @@ jobs:
             bootstrap \
             config \
             database \
-            lang \
+            docker \
+            lang\
             public \
             resources \
             routes \
-            storage/app \
-            storage/framework \
-            vendor \
+            storage \
+           .env.example \
             artisan \
             composer.json \
-            composer.lock
+            composer.lock \
+            docker-compose.yml \
+            package-lock.json \
+            package.json \
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -88,11 +91,7 @@ jobs:
             cd ~/archivarius
 
             tar -xzf /tmp/release.tar.gz -C .
-
-
-            cat > .env << 'EENV'
-           ${{ secrets.ENV_FILE }}
-            EENV
+            echo "${{ secrets.ENV_FILE }}" > .env
 
                docker compose down
                docker compose up -d --build
