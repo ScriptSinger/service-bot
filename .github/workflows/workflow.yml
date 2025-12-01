@@ -25,13 +25,6 @@ jobs:
       - name: Install Composer Dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader
 
-      - name: Install Node Dependencies (If exists)
-        run: |
-          if [ -f package.json ]; then
-            npm ci
-            npm run build
-          fi
-
       - name: Laravel Optimization
         run: |
           php artisan config:cache || true
