@@ -48,7 +48,7 @@ jobs:
             vendor \
             artisan \
             composer.json \
-            composer.lock
+            composer.lock \
             docker-compose.yml
 
       - name: Upload Artifact
