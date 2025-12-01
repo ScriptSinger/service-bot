@@ -1,5 +1,10 @@
 FROM php:8.2-fpm-alpine
 
+# Смена зеркала на CDN
+RUN sed -i 's|http://dl.alpinelinux.org/alpine|https://dl-cdn.alpinelinux.org/alpine|g' /etc/apk/repositories \
+    && apk update
+
+
 ARG UID
 ARG GID
 
@@ -28,7 +33,7 @@ RUN apk add --no-cache \
     && docker-php-ext-install zip pdo pdo_mysql \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && apk del autoconf gcc g++ make   # удаляем временные инструменты для уменьшения
+    && apk del autoconf gcc g++ make
 
 EXPOSE 9000
 CMD ["php-fpm"]
