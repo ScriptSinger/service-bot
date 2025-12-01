@@ -1,9 +1,4 @@
-FROM php:8.2-fpm-alpine
-
-# Смена зеркала на CDN
-RUN sed -i 's|http://dl.alpinelinux.org/alpine|https://dl-cdn.alpinelinux.org/alpine|g' /etc/apk/repositories \
-    && apk update
-
+FROM php:8.2-fpm-bullseye
 
 ARG UID
 ARG GID
@@ -13,28 +8,36 @@ ENV GID=${GID:-1000}
 
 WORKDIR /var/www/html
 
-RUN addgroup -g ${GID} laravel \
-    && adduser -G laravel -D -s /bin/sh -u ${UID} laravel
+# Создаем пользователя и группу
+RUN groupadd -g ${GID} laravel \
+    && useradd -m -u ${UID} -g laravel -s /bin/bash laravel
 
+# Настраиваем PHP-FPM под этого пользователя
 RUN sed -i "s/^user = .*/user = laravel/" /usr/local/etc/php-fpm.d/www.conf \
     && sed -i "s/^group = .*/group = laravel/" /usr/local/etc/php-fpm.d/www.conf
 
-# Установим необходимые расширения PHP
-RUN apk add --no-cache \
+# Установка зависимостей и расширений PHP
+RUN apt-get update && apt-get install -y \
     git \
     bash \
     zip \
     unzip \
     libzip-dev \
-    autoconf \
-    gcc \
+    libpq-dev \
+    libonig-dev \
+    libxml2-dev \
+    pkg-config \
+    libssl-dev \
+    zlib1g-dev \
+    libcurl4-openssl-dev \
+    libicu-dev \
     g++ \
     make \
-    && docker-php-ext-install zip pdo pdo_mysql \
+    autoconf \
+    && docker-php-ext-install pdo pdo_mysql zip \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && apk del autoconf gcc g++ make
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 9000
 CMD ["php-fpm"]
-
