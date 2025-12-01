@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/php.dockerfile
-    user: "${UID}:${GID}"
+    # user: "${UID}:${GID}"
     volumes:
       - ./:/var/www/html
     networks:
