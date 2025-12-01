@@ -1,0 +1,109 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+      - test
+
+jobs:
+  build:
+    name: Build Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, xml, zip, pdo, curl, openssl
+          tools: composer
+
+      - name: Install Composer Dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
+
+      - name: Install Node Dependencies (If exists)
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+            npm run build
+          fi
+
+      - name: Laravel Optimization
+        run: |
+          php artisan config:cache || true
+          php artisan route:cache || true
+          php artisan view:cache || true
+          php artisan optimize || true
+
+      - name: Create Release Archive
+        run: |
+          tar -czf release.tar.gz \
+            app \
+            bootstrap \
+            config \
+            database \
+            lang \
+            public \
+            resources \
+            routes \
+            storage/app \
+            storage/framework \
+            vendor \
+            artisan \
+            composer.json \
+            composer.lock
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: release.tar.gz
+
+  deploy:
+    name: Deploy to Production
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: release
+          path: .
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload Release to Server
+        run: |
+          scp -i ~/.ssh/id_ed25519 release.tar.gz \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/release.tar.gz
+
+      - name: Deploy on Server
+        run: |
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+
+            cd ~/archivarius
+
+            tar -xzf /tmp/release.tar.gz -C .
+
+            # Write .env from GitHub Secret
+            cat > .env << EENV
+          ${{ secrets.ENV_FILE }}
+                EENV
+
+               docker compose down
+               docker compose up -d --build
+
+               docker compose run --rm php php artisan migrate --force
+               docker compose run --rm php php artisan optimize
+          EOF
