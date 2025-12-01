@@ -40,18 +40,16 @@ jobs:
             config \
             database \
             docker \
-            lang\
+            lang \
             public \
             resources \
             routes \
-            storage \
-           .env.example \
+            storage\
+            vendor \
             artisan \
             composer.json \
-            composer.lock \
+            composer.lock
             docker-compose.yml \
-            package-lock.json \
-            package.json \
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
