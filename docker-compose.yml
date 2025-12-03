@@ -78,5 +78,7 @@ services:
         condition: service_started
 networks:
   laravel:
+    external: true
+    name: laravel
 volumes:
   db_data:
