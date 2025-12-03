@@ -50,7 +50,7 @@ class ManualFileFormPage extends FormPage
                     ->nullable(),
 
                 File::make('File', 'file_url')
-                    ->disk('public')
+                    ->disk('yandex')
                     ->dir('manuals/files')
                     ->allowedExtensions(['pdf'])
                     ->removable()

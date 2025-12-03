@@ -14,8 +14,6 @@ services:
       - ./:/var/www/html
     networks:
       - laravel
-      - ufamasters_laravel
-
   nginx:
     image: nginx:1.25-alpine
     volumes:
@@ -25,13 +23,12 @@ services:
       - php
     networks:
       - laravel
-      - ufamasters_laravel
-
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.archivarius.rule=Host(`archivarius.ufamasters.ru`)"
       - "traefik.http.routers.archivarius.entrypoints=websecure"
       - "traefik.http.routers.archivarius.tls.certresolver=myresolver"
+
       - "traefik.http.routers.archivarius-insecure.rule=Host(`archivarius.ufamasters.ru`)"
       - "traefik.http.routers.archivarius-insecure.entrypoints=web"
       - "traefik.http.routers.archivarius-insecure.middlewares=redirect-to-https"
@@ -79,13 +76,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-
+networks:
+  laravel:
 volumes:
   db_data:
-
-networks:
-  ufamasters_laravel:
-    external: true # сеть первого окружения
-
-  laravel:
-    driver: bridge
