@@ -13,7 +13,9 @@ services:
     volumes:
       - ./:/var/www/html
     networks:
-      - archivarius_laravel
+      - laravel
+      - ufamasters_laravel
+
   nginx:
     image: nginx:1.25-alpine
     volumes:
@@ -22,7 +24,9 @@ services:
     depends_on:
       - php
     networks:
-      - archivarius_laravel
+      - laravel
+      - ufamasters_laravel
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.archivarius.rule=Host(`archivarius.ufamasters.ru`)"
@@ -44,7 +48,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - archivarius_laravel
+      - laravel
 
     healthcheck:
       test:
@@ -59,7 +63,7 @@ services:
   redis:
     image: redis:7-alpine
     networks:
-      - archivarius_laravel
+      - laravel
 
   worker:
     build:
@@ -76,9 +80,13 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-networks:
-  laravel:
-    external: true
-    name: archivarius_laravel
+
 volumes:
   db_data:
+
+networks:
+  ufamasters_laravel:
+    external: true # сеть первого окружения
+
+  laravel:
+    driver: bridge
