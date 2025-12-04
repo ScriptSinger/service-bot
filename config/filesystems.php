@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    'default' => env('FILESYSTEM_DISK', 'yandex'),
 
     /*
     |--------------------------------------------------------------------------
@@ -68,6 +68,7 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'endpoint' => env('AWS_URL', 'https://storage.yandexcloud.net'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', true),
+            'url' => 'https://storage.yandexcloud.net/' . env('AWS_BUCKET'),
         ],
 
     ],
