@@ -56,7 +56,7 @@ return [
     ],
 
     // Storage
-    'disk' => 'public',
+    'disk' => 'yandex',
     'disk_options' => [],
     'cache' => 'file',
 

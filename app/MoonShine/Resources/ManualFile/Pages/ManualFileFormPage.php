@@ -12,6 +12,7 @@ use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use App\MoonShine\Resources\ManualFile\ManualFileResource;
+use Illuminate\Support\Facades\Log;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
@@ -39,7 +40,7 @@ class ManualFileFormPage extends FormPage
                 BelongsTo::make(
                     'Manual',
                     'manual',
-                    fn($item) => $item->id,
+                    fn($item) => $item->deviceModel?->name,
                     ManualResource::class
                 )
                     ->required(),
@@ -52,7 +53,7 @@ class ManualFileFormPage extends FormPage
                 File::make('File', 'file_url')
                     ->disk('yandex')
                     ->dir('manuals/files')
-                    ->allowedExtensions(['pdf'])
+                    ->allowedExtensions(['pdf', 'doc', 'txt'])
                     ->removable()
                     ->required(),
             ]),
@@ -71,7 +72,25 @@ class ManualFileFormPage extends FormPage
 
     protected function rules(DataWrapperContract $item): array
     {
-        return [];
+        // Получаем файл из запроса
+        $file = request()->file('file_url');
+
+        if ($file) {
+            Log::info('Uploaded file: ' . $file->getClientOriginalName());
+            Log::info('Temp path: ' . $file->getPathname());
+            Log::info('Is readable: ' . (is_readable($file->getPathname()) ? 'yes' : 'no'));
+            Log::info('Size: ' . $file->getSize());
+        } else {
+            Log::info('No file received in request');
+        }
+
+        return [
+            'manual_id' => ['required', 'exists:manuals,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'language' => ['nullable', 'string'],
+            'file_url' => ['required', 'file', 'mimes:pdf,doc,txt', 'max:51200'], // 50MB
+        ];
     }
 
     /**

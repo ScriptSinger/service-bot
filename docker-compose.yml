@@ -15,6 +15,8 @@ services:
 
     volumes:
       - ./:/var/www/html
+      - ./docker/php/php-overrides.ini:/usr/local/etc/php/conf.d/php-overrides.ini
+
     networks:
       - laravel
       - ufamasters_laravel

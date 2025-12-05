@@ -76,7 +76,7 @@ class BroadcastMessageResource extends ModelResource
                 BelongsToMany::make(
                     'Receivers',
                     'telegramUsers',
-                    fn($item) => $item->name,
+                    fn($user) => "#{$user->id} | {$user->telegram_id} | {$user->username} | {$user->first_name} ",
                     TelegramUserResource::class
                 )
                     ->nullable()
