@@ -5,6 +5,7 @@ namespace App\Telegram\Callbacks;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Keyboard\Keyboard;
 use App\Models\Manual;
+use App\Services\YandexTemporaryUrlService;
 use Illuminate\Support\Facades\Storage;
 
 class ManualCallback
@@ -42,7 +43,7 @@ class ManualCallback
             $keyboard->row([
                 Keyboard::inlineButton([
                     'text' => $label,
-                    'url' => Storage::disk('yandex')->url($file->file_url)
+                    'url' => YandexTemporaryUrlService::make($file->file_url)
                 ])
             ]);
         }
