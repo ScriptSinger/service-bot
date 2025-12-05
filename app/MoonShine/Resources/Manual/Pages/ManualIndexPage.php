@@ -36,7 +36,6 @@ class ManualIndexPage extends IndexPage
         return [
             ID::make()->sortable(),
             Text::make('Brand', 'brand_name'),
-
             BelongsTo::make(
                 'Device Model',
                 'deviceModel',
@@ -48,9 +47,6 @@ class ManualIndexPage extends IndexPage
             Date::make('Updated At', 'updated_at')->format('Y-m-d H:i:s')->sortable(),
         ];
     }
-
-
-
 
     protected function buttons(): ListOf
     {
