@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Manual\Pages;
 
+use App\MoonShine\Resources\Brand\BrandResource;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
@@ -34,16 +35,22 @@ class ManualIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
+            Text::make('Brand', 'brand_name'),
+
             BelongsTo::make(
                 'Device Model',
                 'deviceModel',
                 fn($item) => $item->name,
                 DeviceModelResource::class
             )->sortable(),
+
             Date::make('Created At', 'created_at')->format('Y-m-d H:i:s')->sortable(),
             Date::make('Updated At', 'updated_at')->format('Y-m-d H:i:s')->sortable(),
         ];
     }
+
+
+
 
     protected function buttons(): ListOf
     {
