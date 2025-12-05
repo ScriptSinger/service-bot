@@ -34,7 +34,8 @@ class BrandFormPage extends FormPage
             Box::make([
                 ID::make(),
                 Text::make('Name'),
-                Text::make('Slug'),
+                Text::make('Slug', 'slug')
+                    ->readonly(),
                 Text::make('Country'),
                 BelongsToMany::make(
                     'DeviceTypes',
@@ -58,7 +59,12 @@ class BrandFormPage extends FormPage
 
     protected function rules(DataWrapperContract $item): array
     {
-        return [];
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'deviceTypes' => ['required', 'array', 'exists:device_types,id'],
+        ];
     }
 
     /**
