@@ -19,7 +19,7 @@ services:
 
     networks:
       - laravel
-      - ufamasters_laravel
+      # - ufamasters_laravel
 
   nginx:
     image: nginx:1.25-alpine
@@ -30,7 +30,7 @@ services:
       - php
     networks:
       - laravel
-      - ufamasters_laravel
+      # - ufamasters_laravel
 
     labels:
       - "traefik.enable=true"
@@ -90,8 +90,7 @@ volumes:
   db_data:
 
 networks:
-  ufamasters_laravel:
-    external: true # сеть первого окружения
-
+  # ufamasters_laravel:
+  #   external: true # сеть первого окружения
   laravel:
     driver: bridge

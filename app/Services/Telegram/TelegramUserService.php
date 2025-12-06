@@ -45,8 +45,6 @@ class TelegramUserService
             'limit' => 1
         ]);
 
-        Log::info('User photos', ['photos' => $photos]);
-
         if (empty($photos->photos) || empty($photos->photos[0])) {
             return null;
         }
@@ -54,15 +52,11 @@ class TelegramUserService
         $fileId = $photos->photos[0][0]['file_id'] ?? null;
         if (!$fileId) return null;
 
-        Log::info('File ID', ['file_id' => $fileId]);
 
         $file = $api->getFile(['file_id' => $fileId]);
         $filePath = $file['file_path'] ?? null;
         if (!$filePath) return null;
 
-        Log::info('File path from Telegram', ['file_path' => $filePath]);
-
-        // Создаём папку, если её нет
         $dir = storage_path("app/public/telegram/avatars");
         if (!file_exists($dir)) {
             mkdir($dir, 0755, true);

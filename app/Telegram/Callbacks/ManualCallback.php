@@ -53,7 +53,7 @@ class ManualCallback
             $keyboard->row([
                 Keyboard::inlineButton([
                     'text' => '⬅️ Назад',
-                    'callback_data' => "back_to_model:{$manual->deviceModel->id}"
+                    'callback_data' => "back_to_model:{$manual->deviceModel->brand_id}"
                 ])
             ]);
         }

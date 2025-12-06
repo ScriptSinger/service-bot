@@ -35,7 +35,7 @@ class BrandCallback
                 return;
             }
 
-            $brands = $deviceType->brands()->orderBy('name')->get();
+            $brands =  Brand::orderBy('name')->get();
 
             $keyboard = Keyboard::make()->inline();
             foreach ($brands as $brand) {
