@@ -55,7 +55,6 @@ class ManualFileFormPage extends FormPage
                     ->dir('manuals/files')
                     ->allowedExtensions(['pdf', 'doc', 'txt'])
                     ->removable()
-                    ->required(),
             ]),
         ];
     }
@@ -72,24 +71,12 @@ class ManualFileFormPage extends FormPage
 
     protected function rules(DataWrapperContract $item): array
     {
-        // Получаем файл из запроса
-        $file = request()->file('file_url');
-
-        if ($file) {
-            Log::info('Uploaded file: ' . $file->getClientOriginalName());
-            Log::info('Temp path: ' . $file->getPathname());
-            Log::info('Is readable: ' . (is_readable($file->getPathname()) ? 'yes' : 'no'));
-            Log::info('Size: ' . $file->getSize());
-        } else {
-            Log::info('No file received in request');
-        }
-
         return [
             'manual_id' => ['required', 'exists:manuals,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'language' => ['nullable', 'string'],
-            'file_url' => ['required', 'file', 'mimes:pdf,doc,txt', 'max:51200'], // 50MB
+            'file_url' => ['file', 'mimes:pdf,doc,txt', 'max:51200'], // 50MB
         ];
     }
 
