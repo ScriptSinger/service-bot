@@ -14,15 +14,17 @@ use App\Telegram\Callbacks\{
 class CallbackRegistry
 {
     public static array $map = [
+        'back_to_type'     => DeviceTypeCallback::class,
+        'back_to_brand'    => BrandCallback::class,
+        'back_to_model'    => ModelCallback::class,
+
+        'manual_file_list' => ManualCallback::class,
+        'manual_file'      => ManualCallback::class,
+
         'type'             => DeviceTypeCallback::class,
         'brand'            => BrandCallback::class,
         'model'            => ModelCallback::class,
         'manual'           => ManualCallback::class,
-        'manual_file'      => ManualCallback::class,
-        'manual_file_list' => ManualCallback::class,
-        'back_to_type'     => DeviceTypeCallback::class,
-        'back_to_brand'    => BrandCallback::class,
-        'back_to_model'    => ModelCallback::class,
         'error'            => ErrorCallback::class,
         'testmode'         => TestModeCallback::class,
     ];
