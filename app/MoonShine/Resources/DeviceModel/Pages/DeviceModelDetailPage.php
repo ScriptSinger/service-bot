@@ -10,6 +10,7 @@ use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
+use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
 use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
 use App\MoonShine\Resources\Manual\ManualResource;
 use App\MoonShine\Resources\TestMode\TestModeResource;
@@ -36,6 +37,12 @@ class DeviceModelDetailPage extends DetailPage
     {
         return [
             ID::make(),
+            BelongsTo::make(
+                'Тип техники',
+                'deviceType',
+                fn($item) => $item->name,
+                DeviceTypeResource::class
+            ),
             BelongsTo::make(
                 'Brand',
                 'brand',

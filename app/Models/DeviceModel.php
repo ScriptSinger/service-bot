@@ -16,6 +16,12 @@ class DeviceModel extends Model
         'active',
     ];
 
+
+    public function deviceType()
+    {
+        return $this->belongsTo(DeviceType::class);
+    }
+
     public function brand()
     {
         return $this->belongsTo(Brand::class);

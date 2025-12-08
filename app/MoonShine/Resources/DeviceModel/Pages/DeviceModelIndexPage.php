@@ -13,11 +13,8 @@ use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
-use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
-use App\MoonShine\Resources\Manual\ManualResource;
-use App\MoonShine\Resources\TestMode\TestModeResource;
+use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Text;
@@ -39,6 +36,14 @@ class DeviceModelIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
+
+            BelongsTo::make(
+                'Тип техники',
+                'deviceType',
+                fn($item) => $item->name,
+                DeviceTypeResource::class
+            )->sortable(),
+
             BelongsTo::make(
                 'Brand',
                 'brand',
@@ -51,9 +56,6 @@ class DeviceModelIndexPage extends IndexPage
             Number::make('Year To', 'year_to')->sortable(),
             Text::make('Image URL', 'image_url')->sortable(),
             // SwitchBoolean::make('Active'),
-            // HasMany::make('Manuals', 'manuals', ManualResource::class),
-            // HasMany::make('Test Modes', 'testModes', TestModeResource::class),
-            // HasMany::make('Error Codes', 'errorCodes', ErrorCodeResource::class),
         ];
     }
 
@@ -67,7 +69,21 @@ class DeviceModelIndexPage extends IndexPage
      */
     protected function filters(): iterable
     {
-        return [];
+        return [
+            BelongsTo::make(
+                'Тип техники',
+                'deviceType',
+                fn($item) => $item->name,
+                DeviceTypeResource::class
+            )->nullable(),
+
+            BelongsTo::make(
+                'Brand',
+                'brand',
+                fn($item) => $item->name,
+                BrandResource::class
+            )->nullable(),
+        ];
     }
 
     /**

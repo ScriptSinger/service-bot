@@ -12,9 +12,8 @@ use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
-use App\MoonShine\Resources\Manual\ManualResource;
+use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
@@ -38,6 +37,14 @@ class DeviceModelFormPage extends FormPage
         return [
             Box::make([
                 ID::make(),
+
+                BelongsTo::make(
+                    'Тип техники',
+                    'deviceType',
+                    fn($item) => $item->name,
+                    DeviceTypeResource::class
+                )->required(),
+
                 BelongsTo::make(
                     'Brand',
                     'brand',
@@ -50,9 +57,7 @@ class DeviceModelFormPage extends FormPage
                 Number::make('Year To', 'year_to'),
                 Text::make('Image URL', 'image_url'),
                 Switcher::make('Active'),
-                // HasMany::make('Manuals', 'manuals', ManualResource::class),
-                // HasMany::make('Test Modes', 'testModes', TestModeResource::class),
-                // HasMany::make('Error Codes', 'errorCodes', ErrorCodeResource::class),
+
             ]),
         ];
     }
