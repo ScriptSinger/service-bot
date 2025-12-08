@@ -6,7 +6,6 @@ use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Keyboard\Keyboard;
 use App\Models\DeviceType;
 use App\Services\Telegram\TelegramUserService;
-use App\Telegram\Helpers;
 
 class StartCommand extends Command
 {

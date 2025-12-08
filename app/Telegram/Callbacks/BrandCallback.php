@@ -10,32 +10,13 @@ use App\Models\DeviceType;
 
 class BrandCallback
 {
-    /**
-     * Обработка callback для выбора бренда
-     *
-     * @param CallbackQuery $callback
-     * @param array $data
-     * @return void
-     */
     public function handle(CallbackQuery $callback, array $data)
     {
         $chatId = $callback->message->chat->id;
 
-        // Если это возврат на список брендов (кнопка «Назад»)
+        // Если это возврат к списку брендов
         if ($data[0] === 'back_to_brand') {
-            $typeId = $data[1] ?? null;
-            $deviceType = DeviceType::find($typeId);
-
-            if (!$deviceType) {
-                Telegram::answerCallbackQuery([
-                    'callback_query_id' => $callback->id,
-                    'text' => 'Тип устройства не найден',
-                    'show_alert' => true
-                ]);
-                return;
-            }
-
-            $brands =  Brand::orderBy('name')->get();
+            $brands = Brand::orderBy('name')->get(); // ВСЕ бренды
 
             $keyboard = Keyboard::make()->inline();
             foreach ($brands as $brand) {
@@ -47,7 +28,7 @@ class BrandCallback
                 ]);
             }
 
-            // Кнопка «Назад» возвращает к списку типов
+            // Кнопка «Назад» всегда возвращает к списку типов устройств
             $keyboard->row([
                 Keyboard::inlineButton([
                     'text' => '⬅️ Назад',
@@ -90,11 +71,11 @@ class BrandCallback
             ]);
         }
 
-        // Кнопка «Назад» возвращает к списку брендов (с выбранным типом)
+        // Кнопка «Назад» всегда возвращает к списку брендов
         $keyboard->row([
             Keyboard::inlineButton([
                 'text' => '⬅️ Назад',
-                'callback_data' => "back_to_brand:{$brand->deviceTypes->first()->id}"
+                'callback_data' => 'back_to_brand' // без ID типа
             ])
         ]);
 

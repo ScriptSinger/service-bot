@@ -6,24 +6,18 @@ use Telegram\Bot\Objects\CallbackQuery;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use App\Models\DeviceModel;
+use App\Models\Brand;
 
 class ModelCallback
 {
-    /**
-     * Обработка callback для выбора модели устройства
-     *
-     * @param CallbackQuery $callback
-     * @param array $data
-     * @return void
-     */
     public function handle(CallbackQuery $callback, array $data)
     {
         $chatId = $callback->message->chat->id;
 
-        // Если это возврат к списку моделей
+        // Если это возврат к списку моделей бренда
         if ($data[0] === 'back_to_model') {
             $brandId = $data[1] ?? null;
-            $brand = \App\Models\Brand::find($brandId);
+            $brand = Brand::find($brandId);
 
             if (!$brand) {
                 Telegram::answerCallbackQuery([
@@ -35,6 +29,7 @@ class ModelCallback
             }
 
             $models = $brand->deviceModels()->orderBy('name')->get();
+
             $keyboard = Keyboard::make()->inline();
             foreach ($models as $model) {
                 $keyboard->row([
@@ -45,11 +40,11 @@ class ModelCallback
                 ]);
             }
 
-            // Кнопка «Назад» возвращает к списку брендов
+            // Кнопка «Назад» всегда возвращает к списку брендов
             $keyboard->row([
                 Keyboard::inlineButton([
                     'text' => '⬅️ Назад',
-                    'callback_data' => "back_to_brand:{$brand->id}"
+                    'callback_data' => 'back_to_brand' // без ID
                 ])
             ]);
 
@@ -75,7 +70,7 @@ class ModelCallback
             return;
         }
 
-        // Формируем клавиатуру с опциями
+        // Формируем клавиатуру с опциями модели
         $keyboard = Keyboard::make()->inline();
 
         if ($model->manuals()->exists()) {
@@ -105,11 +100,11 @@ class ModelCallback
             ]);
         }
 
-        // Кнопка «Назад» возвращает к списку моделей бренда
+        // Кнопка «Назад» всегда возвращает к списку брендов
         $keyboard->row([
             Keyboard::inlineButton([
                 'text' => '⬅️ Назад',
-                'callback_data' => "back_to_model:{$model->brand_id}"
+                'callback_data' => 'back_to_brand' // без ID
             ])
         ]);
 
