@@ -15,6 +15,8 @@ class TelegramUser extends Model
         'language_code',
         'avatar_path',
         'last_activity',
+        'state',
+        'state_data',
     ];
 
     public function broadcastMessages(): BelongsToMany

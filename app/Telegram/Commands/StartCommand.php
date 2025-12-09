@@ -3,9 +3,9 @@
 namespace App\Telegram\Commands;
 
 use Telegram\Bot\Commands\Command;
-use Telegram\Bot\Keyboard\Keyboard;
 use App\Models\DeviceType;
 use App\Services\Telegram\TelegramUserService;
+use App\Telegram\Services\KeyboardService;
 
 class StartCommand extends Command
 {
@@ -16,27 +16,32 @@ class StartCommand extends Command
     {
         $from = $this->update->getMessage()->from;
 
-        TelegramUserService::syncUser($from);
+        // 1. Создаём / обновляем пользователя
+        $user = TelegramUserService::syncUser($from);
         TelegramUserService::syncAvatar($from->id);
 
+        // 2. ИНИЦИАЛИЗИРУЕМ FSM
+        $user->update([
+            'state' => 'waiting_type',
+            'state_data' => null,
+        ]);
 
-
+        // 3. Получаем типы устройств
         $types = DeviceType::orderBy('name')->get();
 
-        $keyboard = Keyboard::make()->inline();
+        // 4. Формируем кнопки
+        $buttons = $types->map(fn($type) => [
+            'text' => $type->name,
+            'callback_data' => (string) $type->id,
+        ])->toArray();
 
-        foreach ($types as $type) {
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => $type->name,
-                    'callback_data' => "type:{$type->id}"
-                ])
-            ]);
-        }
+        // 5. Клавиатура
+        $keyboard = app(KeyboardService::class)->buildKeyboard($buttons);
 
+        // 6. Ответ пользователю
         $this->replyWithMessage([
-            'text' => "Выберите тип устройства:",
-            'reply_markup' => $keyboard
+            'text' => 'Выберите тип устройства:',
+            'reply_markup' => $keyboard,
         ]);
     }
 }

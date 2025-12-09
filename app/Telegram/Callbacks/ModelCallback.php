@@ -2,117 +2,88 @@
 
 namespace App\Telegram\Callbacks;
 
-use Telegram\Bot\Objects\CallbackQuery;
-use Telegram\Bot\Keyboard\Keyboard;
-use Telegram\Bot\Laravel\Facades\Telegram;
-use App\Models\DeviceModel;
 use App\Models\Brand;
+use App\Models\DeviceModel;
+use App\Models\TelegramUser;
+use App\Telegram\Services\KeyboardService;
+use App\Telegram\Services\MessageService;
+use Telegram\Bot\Objects\CallbackQuery;
 
 class ModelCallback
 {
-    public function handle(CallbackQuery $callback, array $data)
+    public function __construct(
+        protected KeyboardService $keyboard,
+        protected MessageService $message
+    ) {}
+
+    /**
+     * Обрабатывает нажатие на модель
+     */
+    public function handle(CallbackQuery $callback): void
     {
-        $chatId = $callback->message->chat->id;
+        $chatId    = $callback->message->chat->id;
+        $messageId = $callback->message->message_id;
+        $telegramId = $callback->from->id;
 
-        // Если это возврат к списку моделей бренда
-        if ($data[0] === 'back_to_model') {
-            $brandId = $data[1] ?? null;
-            $brand = Brand::find($brandId);
+        // Получаем пользователя и его состояние
+        $user = TelegramUser::where('telegram_id', $telegramId)->firstOrFail();
 
-            if (!$brand) {
-                Telegram::answerCallbackQuery([
-                    'callback_query_id' => $callback->id,
-                    'text' => 'Бренд не найден',
-                    'show_alert' => true
-                ]);
-                return;
-            }
+        $brandId = $user->state_data['brand_id'] ?? null;
+        $typeId  = $user->state_data['device_type_id'] ?? null;
 
-            $models = $brand->deviceModels()->orderBy('name')->get();
-
-            $keyboard = Keyboard::make()->inline();
-            foreach ($models as $model) {
-                $keyboard->row([
-                    Keyboard::inlineButton([
-                        'text' => $model->name,
-                        'callback_data' => "model:{$model->id}"
-                    ])
-                ]);
-            }
-
-            // Кнопка «Назад» всегда возвращает к списку брендов
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => '⬅️ Назад',
-                    'callback_data' => 'back_to_brand' // без ID
-                ])
-            ]);
-
-            Telegram::editMessageText([
-                'chat_id' => $chatId,
-                'message_id' => $callback->message->message_id,
-                'text' => 'Выберите модель:',
-                'reply_markup' => $keyboard
-            ]);
+        if (!$brandId || !$typeId) {
+            $this->message->answerCallback($callback->id, 'Ошибка: бренд или тип устройства не указан');
             return;
         }
 
-        // Обычный выбор модели
-        $modelId = $data[1] ?? null;
-        $model = DeviceModel::find($modelId);
+        $brand = Brand::find($brandId);
+        $deviceType = $brand ? $brand->deviceTypes()->find($typeId) : null;
 
-        if (!$model) {
-            Telegram::answerCallbackQuery([
-                'callback_query_id' => $callback->id,
-                'text' => 'Модель не найдена',
-                'show_alert' => true
-            ]);
+        if (!$brand || !$deviceType) {
+            $this->message->answerCallback($callback->id, 'Бренд или тип устройства не найден');
             return;
         }
 
-        // Формируем клавиатуру с опциями модели
-        $keyboard = Keyboard::make()->inline();
+        $this->showModels($chatId, $messageId, $brand, $deviceType, $user);
+    }
 
-        if ($model->manuals()->exists()) {
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => '📄 Мануалы',
-                    'callback_data' => "manual:{$model->id}"
-                ])
-            ]);
+    /**
+     * Показываем модели бренда и типа
+     */
+    protected function showModels(int $chatId, int $messageId, Brand $brand, $deviceType, TelegramUser $user)
+    {
+        // Фильтр по бренду и типу
+        $models = DeviceModel::where('brand_id', $brand->id)
+            ->where('device_type_id', $deviceType->id)
+            ->orderBy('name')
+            ->get();
+
+        $buttons = [];
+        foreach ($models as $model) {
+            $buttons[] = [
+                'text' => $model->name,
+                'callback_data' => (string)$model->id, // можно позже для следующего callback
+            ];
         }
 
-        if ($model->testModes()->exists()) {
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => '🛠 Тестовые режимы',
-                    'callback_data' => "testmode:{$model->id}"
-                ])
-            ]);
-        }
+        // Кнопка «Назад» к брендам
+        $buttons[] = [
+            'text' => '⬅️ Назад',
+            'callback_data' => 'back'
+        ];
 
-        if ($model->errorCodes()->exists()) {
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => '⚠ Ошибки',
-                    'callback_data' => "error:{$model->id}"
-                ])
-            ]);
-        }
+        $keyboard = $this->keyboard->buildKeyboard($buttons);
 
-        // Кнопка «Назад» всегда возвращает к списку брендов
-        $keyboard->row([
-            Keyboard::inlineButton([
-                'text' => '⬅️ Назад',
-                'callback_data' => 'back_to_brand' // без ID
-            ])
+        // Переводим FSM в состояние выбора модели
+        $user->update([
+            'state' => 'waiting_model',
         ]);
 
-        Telegram::editMessageText([
-            'chat_id' => $chatId,
-            'message_id' => $callback->message->message_id,
-            'text' => 'Выберите действие для модели:',
-            'reply_markup' => $keyboard
-        ]);
+        $this->message->editMessage(
+            $chatId,
+            $messageId,
+            'Выберите модель:',
+            $keyboard
+        );
     }
 }

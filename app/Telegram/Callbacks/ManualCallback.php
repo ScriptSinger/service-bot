@@ -2,70 +2,64 @@
 
 namespace App\Telegram\Callbacks;
 
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Telegram\Bot\Keyboard\Keyboard;
 use App\Models\Manual;
 use App\Services\YandexTemporaryUrlService;
-use Illuminate\Support\Facades\Storage;
+use App\Telegram\Services\KeyboardService;
+use App\Telegram\Services\MessageService;
+use Telegram\Bot\Objects\CallbackQuery;
 
 class ManualCallback
 {
-    /**
-     * Обработка callback для мануалов
-     *
-     * @param \Telegram\Bot\Objects\CallbackQuery $callback
-     * @param array $data
-     * @return void
-     */
-    public function handle($callback, array $data): void
-    {
-        $chatId = $callback->message->chat->id;
-        $manualId = $data[1] ?? null;
+    public function __construct(
+        protected KeyboardService $keyboard,
+        protected MessageService $message
+    ) {}
 
-        $manual = Manual::with('files')->find($manualId);
+    public function handle(CallbackQuery $callback, array $data): void
+    {
+        $chatId    = $callback->message->chat->id;
+        $messageId = $callback->message->message_id;
+
+        $manualId = $data[1] ?? null;
+        $manual   = Manual::with(['files', 'deviceModel'])->find($manualId);
 
         if (!$manual || $manual->files->isEmpty()) {
-            Telegram::answerCallbackQuery([
-                'callback_query_id' => $callback->id,
-                'text' => 'Мануал или файлы не найдены',
-                'show_alert' => true,
-            ]);
+            $this->message->answerCallback($callback->id, 'Мануал или файлы не найдены');
             return;
         }
 
-        // Формируем клавиатуру с файлами
-        $keyboard = Keyboard::make()->inline();
+        $buttons = [];
+
         foreach ($manual->files as $file) {
             $label = $file->title ?? '📄 Скачать файл';
-            if (!empty($file->language)) {
+
+            if ($file->language) {
                 $label .= " ({$file->language})";
             }
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => $label,
-                    'url' => YandexTemporaryUrlService::make($file->file_url)
-                ])
-            ]);
+
+            $buttons[] = [
+                'text' => $label,
+                'url'  => YandexTemporaryUrlService::make($file->file_url),
+            ];
         }
 
-        // Кнопка «Назад» возвращает к модели
         if ($manual->deviceModel) {
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => '⬅️ Назад',
-                    'callback_data' => "back_to_model:{$manual->deviceModel->brand_id}"
-                ])
-            ]);
+            $buttons[] = [
+                'text' => '⬅️ Назад',
+                'callback_data' => "back_to_model:{$manual->deviceModel->brand_id}",
+            ];
         }
 
-        // Заголовок берём просто как "Мануал для модели" (title теперь в файлах)
-        $text = "📘 Мануал для модели: {$manual->deviceModel->name}";
+        $keyboard = $this->keyboard->actions($buttons);
 
-        Telegram::editMessageText([
-            'chat_id' => $chatId,
-            'message_id' => $callback->message->message_id,
-            'text' => $text . "\n\nВыберите файл для скачивания:",
-            'reply_markup' => $keyboard
-        ]);
+        $text = "📘 Мануал для модели: {$manual->deviceModel->name}\n\n"
+            . "Выберите файл для скачивания:";
+
+        $this->message->editMessage(
+            $chatId,
+            $messageId,
+            $text,
+            $keyboard
+        );
     }
 }
