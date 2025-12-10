@@ -26,4 +26,8 @@ class TelegramUser extends Model
             'broadcast_message_user'   // промежуточная таблица
         );
     }
+
+    protected $casts = [
+        'state_data' => 'array', //  конвертирует JSON в массив
+    ];
 }

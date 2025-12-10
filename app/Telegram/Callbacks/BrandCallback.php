@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\TelegramUser;
 use App\Telegram\Services\KeyboardService;
 use App\Telegram\Services\MessageService;
+
 use Telegram\Bot\Objects\CallbackQuery;
 
 class BrandCallback
@@ -23,6 +24,8 @@ class BrandCallback
         $data = $callback->data;
         $user = TelegramUser::where('telegram_id', $telegramId)->firstOrFail();
 
+        $typeId = $user->state_data['device_type_id'] ?? null;
+
         // Выбор бренда
         $brandId = (int)$data;
         $brand = Brand::find($brandId);
@@ -37,12 +40,15 @@ class BrandCallback
             ],
         ]);
 
-        $this->showModels($chatId, $messageId, $brand);
+        $this->showModels($chatId, $messageId, $brand, $typeId);
     }
 
-    protected function showModels(int $chatId, int $messageId, Brand $brand)
+    protected function showModels(int $chatId, int $messageId, Brand $brand, $typeId)
     {
-        $models = $brand->deviceModels()->orderBy('name')->get();
+        $models = $brand->deviceModels()
+            ->where('device_type_id', [$typeId])
+            ->orderBy('name')
+            ->get();
 
         $buttons = $models->map(fn($model) => [
             'text' => $model->name,

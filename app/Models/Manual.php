@@ -19,9 +19,4 @@ class Manual extends Model
     {
         return $this->hasMany(ManualFile::class);
     }
-
-    public function getBrandNameAttribute(): ?string
-    {
-        return $this->deviceModel?->brand?->name;
-    }
 }

@@ -7,6 +7,7 @@ use App\Models\DeviceType;
 use App\Models\TelegramUser;
 use App\Telegram\Services\KeyboardService;
 use App\Telegram\Services\MessageService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Objects\CallbackQuery;
 
 class BackCallback
@@ -38,8 +39,10 @@ class BackCallback
 
             case 'waiting_model':
                 // Возврат к выбору бренда
+
                 $brandId = $user->state_data['brand_id'] ?? null;
                 $typeId = $user->state_data['device_type_id'] ?? null;
+
                 if ($brandId && $typeId) {
                     $brand = Brand::find($brandId);
                     $deviceType = DeviceType::find($typeId);

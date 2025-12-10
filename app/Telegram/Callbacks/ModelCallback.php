@@ -7,6 +7,7 @@ use App\Models\DeviceModel;
 use App\Models\TelegramUser;
 use App\Telegram\Services\KeyboardService;
 use App\Telegram\Services\MessageService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Objects\CallbackQuery;
 
 class ModelCallback
@@ -29,7 +30,7 @@ class ModelCallback
         $user = TelegramUser::where('telegram_id', $telegramId)->firstOrFail();
 
         $brandId = $user->state_data['brand_id'] ?? null;
-        $typeId  = $user->state_data['device_type_id'] ?? null;
+        $typeId = $user->state_data['device_type_id'] ?? null;
 
         if (!$brandId || !$typeId) {
             $this->message->answerCallback($callback->id, 'Ошибка: бренд или тип устройства не указан');
@@ -52,7 +53,6 @@ class ModelCallback
      */
     protected function showModels(int $chatId, int $messageId, Brand $brand, $deviceType, TelegramUser $user)
     {
-        // Фильтр по бренду и типу
         $models = DeviceModel::where('brand_id', $brand->id)
             ->where('device_type_id', $deviceType->id)
             ->orderBy('name')

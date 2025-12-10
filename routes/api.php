@@ -4,6 +4,7 @@ use App\Models\TelegramUser;
 use App\Telegram\Callbacks\BrandCallback;
 use App\Telegram\Callbacks\TypeCallback;
 use App\Telegram\Callbacks\BackCallback;
+use App\Telegram\Callbacks\ManualCallback;
 use App\Telegram\Callbacks\ModelCallback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,10 @@ Route::post('/telegram/webhook', function (Request $request) {
 
             case 'waiting_model':
                 app(ModelCallback::class)->handle($callback);
+                break;
+
+            case 'waiting_manual':
+                app(ManualCallback::class)->handle($callback);
                 break;
         }
     }
