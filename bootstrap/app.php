@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->prepend(TrustProxies::class);
+        $middleware->validateCsrfTokens(except: [
+            'botman',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
