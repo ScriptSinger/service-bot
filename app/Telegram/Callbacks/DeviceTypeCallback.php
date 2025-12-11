@@ -66,7 +66,7 @@ class DeviceTypeCallback
             $keyboard->row([
                 Keyboard::inlineButton([
                     'text' => $brand->name,
-                    'callback_data' => "brand:{$brand->id}"
+                    'callback_data' => "brand:{$brand->id}:{$typeId}"
                 ])
             ]);
         }

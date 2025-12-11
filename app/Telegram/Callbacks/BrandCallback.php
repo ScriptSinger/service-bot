@@ -7,12 +7,17 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use App\Models\Brand;
 use App\Models\DeviceType;
+use Illuminate\Support\Facades\Log;
 
 class BrandCallback
 {
     public function handle(CallbackQuery $callback, array $data)
     {
         $chatId = $callback->message->chat->id;
+        $parts = explode(':', $callback->data);
+        $prefix = $parts[0] ?? null;
+        $brandId = $parts[1] ?? null;
+        $typeId  = $parts[2] ?? null;
 
         // Если это возврат к списку брендов
         if ($data[0] === 'back_to_brand') {
@@ -59,7 +64,11 @@ class BrandCallback
         }
 
         // Получаем модели бренда
-        $models = $brand->deviceModels()->orderBy('name')->get();
+        $models = $brand->deviceModels()
+            ->when($typeId, fn($q) => $q->where('device_type_id', $typeId))
+            ->orderBy('name')
+            ->get();
+
 
         $keyboard = Keyboard::make()->inline();
         foreach ($models as $model) {
