@@ -1,9 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\DeviceModelController;
-use App\Http\Controllers\Api\DeviceTypeController;
-use App\Http\Controllers\Api\ErrorCodeController;
-use App\Http\Controllers\Api\ManualController;
 use App\Telegram\CallbackRouter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

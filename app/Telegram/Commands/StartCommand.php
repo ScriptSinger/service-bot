@@ -3,9 +3,8 @@
 namespace App\Telegram\Commands;
 
 use Telegram\Bot\Commands\Command;
-use Telegram\Bot\Keyboard\Keyboard;
-use App\Models\DeviceType;
 use App\Services\Telegram\TelegramUserService;
+use App\Telegram\Callbacks\TypeCallback;
 
 class StartCommand extends Command
 {
@@ -19,24 +18,7 @@ class StartCommand extends Command
         TelegramUserService::syncUser($from);
         TelegramUserService::syncAvatar($from->id);
 
-
-
-        $types = DeviceType::orderBy('name')->get();
-
-        $keyboard = Keyboard::make()->inline();
-
-        foreach ($types as $type) {
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => $type->name,
-                    'callback_data' => "type:{$type->id}"
-                ])
-            ]);
-        }
-
-        $this->replyWithMessage([
-            'text' => "Выберите тип устройства:",
-            'reply_markup' => $keyboard
-        ]);
+        $typeCallback = new TypeCallback();
+        $typeCallback->renderTypesKeyboardForMessage($from->id);
     }
 }

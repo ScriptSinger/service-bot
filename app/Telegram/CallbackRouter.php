@@ -2,26 +2,43 @@
 
 namespace App\Telegram;
 
-use Telegram\Bot\Objects\CallbackQuery;
+use App\Services\Telegram\NavigationService;
+
+use App\Telegram\Callbacks\{
+    TypeCallback,
+    BrandCallback,
+    ModelCallback,
+    ManualCallback,
+};
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class CallbackRouter
 {
-    public static function handle(CallbackQuery $callback)
+    public static function handle($callback)
     {
-        $data = explode(':', $callback->data);
-        $command = $data[0];
+        $nav = app(NavigationService::class);
+        $ctx = $nav->decode($callback->data); // ['step' => 'brands', 'type' => 1]
 
-        $handlerClass = CallbackRegistry::$map[$command] ?? null;
+        $step = $ctx['step'] ?? null;
 
-        if (!$handlerClass) {
-            // если команда не найдена, используем ErrorCallback
-            $handlerClass = CallbackRegistry::$map['error'];
+        $handlerClass = match ($step) {
+            'types' => TypeCallback::class,
+            'brands' => BrandCallback::class,
+            'models' => ModelCallback::class,
+            'manuals' => ManualCallback::class,
+            default => null
+        };
+
+        if ($handlerClass) {
+            $handler = app($handlerClass);
+            return $handler->handle($callback, $ctx);
         }
 
-        // создаём экземпляр обработчика через контейнер Laravel
-        $handler = app($handlerClass);
-
-        // вызываем экземплярный метод handle()
-        return $handler->handle($callback, $data);
+        // неизвестная команда
+        Telegram::answerCallbackQuery([
+            'callback_query_id' => $callback->id,
+            'text' => 'Неизвестная команда',
+            'show_alert' => true,
+        ]);
     }
 }
