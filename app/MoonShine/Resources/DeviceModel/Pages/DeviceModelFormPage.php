@@ -43,7 +43,8 @@ class DeviceModelFormPage extends FormPage
                     'deviceType',
                     fn($item) => $item->name,
                     DeviceTypeResource::class
-                )->required(),
+                )->required()
+                    ->nullable(),
 
                 BelongsTo::make(
                     'Brand',

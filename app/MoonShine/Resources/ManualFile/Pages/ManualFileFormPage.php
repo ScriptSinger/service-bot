@@ -76,7 +76,7 @@ class ManualFileFormPage extends FormPage
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'language' => ['nullable', 'string'],
-            'file_url' => ['file', 'mimes:pdf,doc,txt', 'max:51200'], // 50MB
+            'file_url' => ['file', 'mimes:pdf,doc,txt', 'max:204800'], // 200MB
         ];
     }
 
