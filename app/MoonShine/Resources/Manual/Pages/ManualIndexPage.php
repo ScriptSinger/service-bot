@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Manual\Pages;
 
-use App\MoonShine\Resources\Brand\BrandResource;
+use App\Models\DeviceModel;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
@@ -18,6 +18,7 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Date;
+use MoonShine\UI\Fields\Select;
 use Throwable;
 
 

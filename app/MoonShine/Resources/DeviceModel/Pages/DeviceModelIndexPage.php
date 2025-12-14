@@ -17,10 +17,10 @@ use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\Number;
+use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Textarea;
 use Throwable;
-
 
 /**
  * @extends IndexPage<DeviceModelResource>
@@ -77,12 +77,9 @@ class DeviceModelIndexPage extends IndexPage
                 DeviceTypeResource::class
             )->nullable(),
 
-            BelongsTo::make(
-                'Brand',
-                'brand',
-                fn($item) => $item->name,
-                BrandResource::class
-            )->nullable(),
+            Select::make('Brand', 'brand_id')
+                ->options(\App\Models\Brand::pluck('name', 'id')->toArray())
+                ->nullable(),
         ];
     }
 

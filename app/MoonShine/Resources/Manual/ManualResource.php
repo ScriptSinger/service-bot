@@ -11,7 +11,6 @@ use App\MoonShine\Resources\Manual\Pages\ManualDetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
 
-
 /**
  * @extends ModelResource<Manual, ManualIndexPage, ManualFormPage, ManualDetailPage>
  */
@@ -30,6 +29,13 @@ class ManualResource extends ModelResource
             ManualIndexPage::class,
             ManualFormPage::class,
             ManualDetailPage::class,
+        ];
+    }
+
+    public function search(): array
+    {
+        return [
+            'deviceModel.name',
         ];
     }
 }
