@@ -19,7 +19,6 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\File;
-use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\Textarea;
@@ -39,14 +38,12 @@ class ManualFormPage extends FormPage
         return [
             Box::make([
                 ID::make(),
-
                 BelongsTo::make(
                     'Device Model',
                     'deviceModel',
                     fn($item) => $item->name,
                     DeviceModelResource::class
                 ),
-
 
                 HasMany::make('Files', 'files', null, ManualFileResource::class)
                     ->fields([

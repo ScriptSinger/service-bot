@@ -36,28 +36,28 @@ class DeviceModelDetailPage extends DetailPage
     protected function fields(): iterable
     {
         return [
-            ID::make(),
-            BelongsTo::make(
-                'Тип техники',
-                'deviceType',
-                fn($item) => $item->name,
-                DeviceTypeResource::class
-            ),
-            BelongsTo::make(
-                'Brand',
-                'brand',
-                fn($item) => $item->name,
-                BrandResource::class
-            ),
-            Text::make('Name'),
-            Textarea::make('Description'),
-            Number::make('Year From', 'year_from'),
-            Number::make('Year To', 'year_to'),
-            Text::make('Image URL', 'image_url'),
-            Switcher::make('Active'),
-            HasMany::make('Manuals', 'manuals', ManualResource::class),
-            HasMany::make('Test Modes', 'testModes',  TestModeResource::class),
-            HasMany::make('Error Codes', 'errorCodes', ErrorCodeResource::class),
+            // ID::make(),
+            // BelongsTo::make(
+            //     'Тип техники',
+            //     'deviceType',
+            //     fn($item) => $item->name,
+            //     DeviceTypeResource::class
+            // ),
+            // BelongsTo::make(
+            //     'Brand',
+            //     'brand',
+            //     fn($item) => $item->name,
+            //     BrandResource::class
+            // ),
+            // Text::make('Name'),
+            // Textarea::make('Description'),
+            // Number::make('Year From', 'year_from'),
+            // Number::make('Year To', 'year_to'),
+            // Text::make('Image URL', 'image_url'),
+            // Switcher::make('Active'),
+            // HasMany::make('Manuals', 'manuals', ManualResource::class),
+            // HasMany::make('Test Modes', 'testModes',  TestModeResource::class),
+            // HasMany::make('Error Codes', 'errorCodes', ErrorCodeResource::class),
         ];
     }
 

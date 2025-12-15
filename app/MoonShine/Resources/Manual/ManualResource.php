@@ -17,7 +17,6 @@ use MoonShine\Contracts\Core\PageContract;
 class ManualResource extends ModelResource
 {
     protected string $model = Manual::class;
-
     protected string $title = 'Manuals';
 
     /**
