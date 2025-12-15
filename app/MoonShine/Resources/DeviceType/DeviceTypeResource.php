@@ -17,7 +17,7 @@ use MoonShine\Contracts\Core\PageContract;
 class DeviceTypeResource extends ModelResource
 {
     protected string $model = DeviceType::class;
-    protected string $title = 'DeviceTypes';
+    protected string $title = 'Types';
 
 
     /**

@@ -28,7 +28,7 @@ use MoonShine\UI\Fields\Textarea;
 class DeviceModelResource extends ModelResource
 {
     protected string $model = DeviceModel::class;
-    protected string $title = 'DeviceModels';
+    protected string $title = 'Models';
 
     protected function indexFields(): iterable
     {
@@ -67,7 +67,8 @@ class DeviceModelResource extends ModelResource
                     fn($item) => $item->name,
                     DeviceTypeResource::class
                 )->required()
-                    ->nullable(),
+                    ->nullable()
+                    ->searchable(),
 
                 BelongsTo::make(
                     'Brand',

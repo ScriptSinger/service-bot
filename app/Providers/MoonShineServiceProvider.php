@@ -6,7 +6,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
-use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\Laravel\DependencyInjection\MoonShineConfigurator;
 use App\MoonShine\Resources\MoonShineUser\MoonShineUserResource;
 use App\MoonShine\Resources\MoonShineUserRole\MoonShineUserRoleResource;
@@ -14,8 +13,6 @@ use App\MoonShine\Resources\DeviceType\DeviceTypeResource;
 use App\MoonShine\Resources\Brand\BrandResource;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use App\MoonShine\Resources\Manual\ManualResource;
-use App\MoonShine\Resources\TestMode\TestModeResource;
-use App\MoonShine\Resources\ErrorCode\ErrorCodeResource;
 use App\MoonShine\Resources\ManualFile\ManualFileResource;
 use App\MoonShine\Resources\TelegramUser\TelegramUserResource;
 use App\MoonShine\Resources\User\UserResource;
@@ -36,8 +33,6 @@ class MoonShineServiceProvider extends ServiceProvider
                 BrandResource::class,
                 DeviceModelResource::class,
                 ManualResource::class,
-                TestModeResource::class,
-                ErrorCodeResource::class,
                 ManualFileResource::class,
                 TelegramUserResource::class,
                 UserResource::class,

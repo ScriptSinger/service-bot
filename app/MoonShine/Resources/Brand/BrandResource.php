@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Brand;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Brand;
 use App\MoonShine\Resources\Brand\Pages\BrandIndexPage;
 use App\MoonShine\Resources\Brand\Pages\BrandFormPage;
@@ -20,10 +19,7 @@ use MoonShine\UI\Fields\Textarea;
 class BrandResource extends ModelResource
 {
     protected string $model = Brand::class;
-
     protected string $title = 'Brands';
-
-
 
     public function fields(): array
     {

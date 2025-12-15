@@ -16,7 +16,6 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use Throwable;
 
-
 /**
  * @extends DetailPage<BrandResource>
  */

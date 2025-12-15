@@ -43,7 +43,7 @@ class ManualFormPage extends FormPage
                     'deviceModel',
                     fn($item) => $item->name,
                     DeviceModelResource::class
-                ),
+                )->searchable(),
 
                 HasMany::make('Files', 'files', null, ManualFileResource::class)
                     ->fields([

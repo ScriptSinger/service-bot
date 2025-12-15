@@ -19,9 +19,8 @@ use MoonShine\Contracts\Core\PageContract;
 class ManualFileResource extends ModelResource
 {
     protected string $model = ManualFile::class;
+    protected string $title = 'Files';
 
-    protected string $title = 'ManualFiles';
-    
     /**
      * @return list<class-string<PageContract>>
      */
