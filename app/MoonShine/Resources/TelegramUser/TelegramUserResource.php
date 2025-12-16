@@ -35,6 +35,7 @@ class TelegramUserResource extends ModelResource
             Date::make('Last Activity', 'last_activity')
                 ->withTime()
                 ->format('d.m.Y H:i:s')
+                ->sortable()
         ];
     }
 
