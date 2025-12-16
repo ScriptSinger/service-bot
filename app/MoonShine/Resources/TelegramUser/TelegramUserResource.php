@@ -10,6 +10,7 @@ use App\MoonShine\Resources\TelegramUser\Pages\TelegramUserFormPage;
 use App\MoonShine\Resources\TelegramUser\Pages\TelegramUserDetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
+use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Text;
@@ -31,6 +32,9 @@ class TelegramUserResource extends ModelResource
             Text::make('First Name', 'first_name')->sortable(),
             Text::make('Username', 'username')->sortable(),
             Text::make('Language Code', 'language_code')->sortable(),
+            Date::make('Last Activity', 'last_activity')
+                ->withTime()
+                ->format('d.m.Y H:i:s')
         ];
     }
 
