@@ -55,16 +55,6 @@ services:
     networks:
       - laravel
 
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "mysqladmin ping -h localhost -u${DB_USERNAME} -p${DB_PASSWORD} || exit 1",
-        ]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-
   redis:
     image: redis:7-alpine
     networks:
@@ -80,11 +70,6 @@ services:
       - laravel
     command: >
       sh -c "php artisan queue:work redis --queue=broadcast.telegram --tries=3 --timeout=90"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_started
 
 volumes:
   db_data:

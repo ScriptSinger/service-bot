@@ -18,7 +18,6 @@ use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Textarea;
 use Throwable;
 
-
 /**
  * @extends DetailPage<ManualFileResource>
  */

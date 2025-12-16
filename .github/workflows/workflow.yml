@@ -86,14 +86,10 @@ jobs:
             echo "${{ secrets.ENV_FILE }}" > .env
               docker compose down
               docker system prune -af
-
-
               docker compose up -d --build
-
               docker compose exec php php artisan optimize:clear
               docker compose exec php php artisan config:cache
               docker compose exec php php artisan route:cache
               docker compose exec php php artisan view:cache
-
               docker compose run --rm php php artisan migrate --force
           EOF

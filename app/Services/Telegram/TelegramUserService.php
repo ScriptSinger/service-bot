@@ -5,7 +5,6 @@ namespace App\Services\Telegram;
 use App\Models\TelegramUser;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
-use Illuminate\Support\Facades\Storage;
 
 class TelegramUserService
 {

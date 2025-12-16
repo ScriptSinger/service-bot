@@ -12,7 +12,6 @@ use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use App\MoonShine\Resources\ManualFile\ManualFileResource;
-use Illuminate\Support\Facades\Log;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
