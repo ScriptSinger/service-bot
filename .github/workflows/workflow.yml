@@ -87,12 +87,13 @@ jobs:
               docker compose down
               docker system prune -af
 
-              docker compose run --rm php php artisan optimize:clear
+
               docker compose up -d --build
 
-              docker compose run --rm php php artisan config:cache
-              docker compose run --rm php php artisan route:cache
-              docker compose run --rm php php artisan view:cache
+              docker compose exec php php artisan optimize:clear
+              docker compose exec php php artisan config:cache
+              docker compose exec php php artisan route:cache
+              docker compose exec php php artisan view:cache
 
               docker compose run --rm php php artisan migrate --force
           EOF
