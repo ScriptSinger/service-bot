@@ -25,13 +25,6 @@ jobs:
       - name: Install Composer Dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader
 
-      - name: Laravel Optimization
-        run: |
-          php artisan config:cache || true
-          php artisan route:cache || true
-          php artisan view:cache || true
-          php artisan optimize || true
-
       - name: Create Release Archive
         run: |
           tar -czf release.tar.gz \
@@ -91,15 +84,15 @@ jobs:
             tar -xzf /tmp/release.tar.gz -C .
 
             echo "${{ secrets.ENV_FILE }}" > .env
-
               docker compose down
               docker system prune -af
+
+              docker compose run --rm php php artisan optimize:clear
               docker compose up -d --build
 
-              docker compose run --rm php php artisan config:clear
-              docker compose run --rm php php artisan cache:clear
               docker compose run --rm php php artisan config:cache
-              docker compose run --rm php php artisan migrate --force
-              docker compose run --rm php php artisan optimize
+              docker compose run --rm php php artisan route:cache
+              docker compose run --rm php php artisan view:cache
 
+              docker compose run --rm php php artisan migrate --force
           EOF
