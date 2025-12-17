@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\TelegramUserSync;
 use App\Telegram\CallbackRouter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +27,4 @@ Route::post('/telegram/webhook', function (Request $request) {
     if ($update && $update->callbackQuery) {
         CallbackRouter::handle($update->callbackQuery);
     }
-});
+})->middleware(TelegramUserSync::class);;

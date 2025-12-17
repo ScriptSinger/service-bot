@@ -15,7 +15,6 @@ class StartCommand extends Command
     {
         $from = $this->update->getMessage()->from;
 
-        TelegramUserService::syncUser($from);
         TelegramUserService::syncAvatar($from->id);
 
         $typeCallback = new TypeCallback();
