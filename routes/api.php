@@ -1,10 +1,9 @@
 <?php
 
 use App\Http\Middleware\TelegramUserSync;
-use App\Telegram\CallbackRouter;
+use App\Jobs\ProcessTelegramUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -21,10 +20,6 @@ Route::get('/user', function (Request $request) {
 // });
 
 Route::post('/telegram/webhook', function (Request $request) {
-
-    $update = Telegram::commandsHandler(true);
-
-    if ($update && $update->callbackQuery) {
-        CallbackRouter::handle($update->callbackQuery);
-    }
-})->middleware(TelegramUserSync::class);;
+    ProcessTelegramUpdate::dispatch($request->all())->onQueue('broadcast.telegram');
+    return response()->json(['ok' => true]);
+})->middleware(TelegramUserSync::class);
