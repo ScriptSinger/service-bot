@@ -12,7 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Telegram\Bot\Api;
+use App\Services\Telegram\TelegramApiFactory;
 use Throwable;
 
 
@@ -33,7 +33,7 @@ class SendBroadcastJob implements ShouldQueue
     {
         $broadcast = BroadcastMessage::findOrFail($this->broadcastId);
 
-        $api = new Api(config('telegram.bots.mybot.token'));
+        $api = TelegramApiFactory::make();
         $results = [];
 
         $users = TelegramUser::whereIn('id', $this->users)->get();

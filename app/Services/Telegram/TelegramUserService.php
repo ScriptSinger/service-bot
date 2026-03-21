@@ -4,7 +4,8 @@ namespace App\Services\Telegram;
 
 use App\Models\TelegramUser;
 use Illuminate\Support\Facades\Log;
-use Telegram\Bot\Api;
+use App\Services\Telegram\TelegramApiFactory;
+use GuzzleHttp\Exception\GuzzleException;
 
 class TelegramUserService
 {
@@ -37,7 +38,7 @@ class TelegramUserService
 
     public static function syncAvatar(int $telegramId): ?string
     {
-        $api = new Api(config('telegram.bots.mybot.token'));
+        $api = TelegramApiFactory::make();
 
         $photos = $api->getUserProfilePhotos([
             'user_id' => $telegramId,
@@ -64,9 +65,13 @@ class TelegramUserService
         $localPath = "telegram/avatars/{$telegramId}.jpg";
         $fullPath = storage_path("app/public/{$localPath}");
 
+        $url = "https://api.telegram.org/file/bot" . config('telegram.bots.mybot.token') . "/{$filePath}";
+
         try {
-            file_put_contents($fullPath, file_get_contents("https://api.telegram.org/file/bot" . config('telegram.bots.mybot.token') . "/{$filePath}"));
-        } catch (\Exception $e) {
+            $client = TelegramApiFactory::makeGuzzleClient();
+            $response = $client->get($url);
+            file_put_contents($fullPath, $response->getBody()->getContents());
+        } catch (GuzzleException|\Exception $e) {
             Log::error('Failed to download avatar', ['error' => $e->getMessage()]);
             return null;
         }
