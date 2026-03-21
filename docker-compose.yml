@@ -12,6 +12,8 @@ services:
       context: .
       dockerfile: docker/php/php.dockerfile
     user: "${UID}:${GID}"
+    env_file:
+      - .env
 
     volumes:
       - ./:/var/www/html
@@ -64,6 +66,8 @@ services:
     build:
       context: .
       dockerfile: docker/php/php.dockerfile
+    env_file:
+      - .env
     volumes:
       - ./:/var/www/html
     networks:
