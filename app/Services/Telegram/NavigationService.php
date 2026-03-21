@@ -3,6 +3,7 @@
 namespace App\Services\Telegram;
 
 use App\Services\YandexTemporaryUrlService;
+use Telegram\Bot\Exceptions\TelegramResponseException;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -73,12 +74,19 @@ class NavigationService
 
     public function editMessage(int $chatId, int $messageId, string $text, $keyboard)
     {
-        return Telegram::editMessageText([
-            'chat_id' => $chatId,
-            'message_id' => $messageId,
-            'text' => $text,
-            'reply_markup' => $keyboard
-        ]);
+        try {
+            return Telegram::editMessageText([
+                'chat_id' => $chatId,
+                'message_id' => $messageId,
+                'text' => $text,
+                'reply_markup' => $keyboard
+            ]);
+        } catch (TelegramResponseException $e) {
+            if (str_contains($e->getMessage(), 'message is not modified')) {
+                return null;
+            }
+            throw $e;
+        }
     }
 
 
