@@ -20,6 +20,27 @@ Route::get('/user', function (Request $request) {
 // });
 
 Route::post('/telegram/webhook', function (Request $request) {
-    ProcessTelegramUpdate::dispatch($request->all())->onQueue('broadcast.telegram');
+    $payload = $request->all();
+    $updateId = $payload['update_id'] ?? null;
+    $type = array_key_first(array_intersect_key($payload, array_flip([
+        'message',
+        'edited_message',
+        'channel_post',
+        'edited_channel_post',
+        'inline_query',
+        'chosen_inline_result',
+        'callback_query',
+        'shipping_query',
+        'pre_checkout_query',
+        'poll',
+        'poll_answer',
+        'my_chat_member',
+        'chat_member',
+        'chat_join_request',
+    ]))) ?? 'unknown';
+
+    \Log::info('telegram.webhook', ['update_id' => $updateId, 'type' => $type]);
+
+    ProcessTelegramUpdate::dispatch($payload)->onQueue('telegram.webhook');
     return response()->json(['ok' => true]);
 })->middleware(TelegramUserSync::class);

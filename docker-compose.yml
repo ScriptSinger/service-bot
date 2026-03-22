@@ -73,7 +73,7 @@ services:
     networks:
       - laravel
     command: >
-      sh -c "php artisan queue:work redis --queue=broadcast.telegram --tries=3 --timeout=90"
+      sh -c "php artisan queue:work redis --queue=telegram.webhook,broadcast.telegram --tries=3 --timeout=90 --sleep=1 -vvv"
 
 volumes:
   db_data:
