@@ -4,8 +4,10 @@ namespace App\Telegram\Callbacks;
 
 use App\Models\DeviceModel;
 use App\Models\TestMode;
+use Telegram\Bot\Exceptions\TelegramResponseException;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Throwable;
 
 class TestModeCallback
 {
@@ -19,12 +21,28 @@ class TestModeCallback
 
             $tests = $model->testModes;
 
-            Telegram::editMessageText([
-                'chat_id'    => $callback->message->chat->id,
-                'message_id' => $callback->message->message_id,
-                'text'       => "Тестовые режимы для: {$model->name}",
-                'reply_markup' => Keyboard::list($tests, 'test:view')
-            ]);
+            try {
+                Telegram::editMessageText([
+                    'chat_id'    => $callback->message->chat->id,
+                    'message_id' => $callback->message->message_id,
+                    'text'       => "Тестовые режимы для: {$model->name}",
+                    'reply_markup' => Keyboard::list($tests, 'test:view')
+                ]);
+            } catch (TelegramResponseException $e) {
+                \Log::warning('telegram.editMessage.failed', [
+                    'chat_id' => $callback->message->chat->id,
+                    'message_id' => $callback->message->message_id,
+                    'error' => $e->getMessage(),
+                ]);
+                throw $e;
+            } catch (Throwable $e) {
+                \Log::error('telegram.editMessage.error', [
+                    'chat_id' => $callback->message->chat->id,
+                    'message_id' => $callback->message->message_id,
+                    'error' => $e->getMessage(),
+                ]);
+                throw $e;
+            }
         }
 
         if ($action === 'view') {
@@ -36,11 +54,25 @@ class TestModeCallback
                 . "\nВыход: {$test->exit_combination}"
                 . "\n\n{$test->notes}";
 
-            Telegram::sendMessage([
-                'chat_id' => $callback->message->chat->id,
-                'text' => $text,
-                'parse_mode' => 'Markdown'
-            ]);
+            try {
+                Telegram::sendMessage([
+                    'chat_id' => $callback->message->chat->id,
+                    'text' => $text,
+                    'parse_mode' => 'Markdown'
+                ]);
+            } catch (TelegramResponseException $e) {
+                \Log::warning('telegram.sendMessage.failed', [
+                    'chat_id' => $callback->message->chat->id,
+                    'error' => $e->getMessage(),
+                ]);
+                throw $e;
+            } catch (Throwable $e) {
+                \Log::error('telegram.sendMessage.error', [
+                    'chat_id' => $callback->message->chat->id,
+                    'error' => $e->getMessage(),
+                ]);
+                throw $e;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ use App\Services\YandexTemporaryUrlService;
 use Telegram\Bot\Exceptions\TelegramResponseException;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Throwable;
 
 class NavigationService
 {
@@ -65,11 +66,25 @@ class NavigationService
 
     public function sendMessage(int $chatId, string $text, $keyboard)
     {
-        return Telegram::sendMessage([
-            'chat_id' => $chatId,
-            'text' => $text,
-            'reply_markup' => $keyboard
-        ]);
+        try {
+            return Telegram::sendMessage([
+                'chat_id' => $chatId,
+                'text' => $text,
+                'reply_markup' => $keyboard
+            ]);
+        } catch (TelegramResponseException $e) {
+            \Log::warning('telegram.sendMessage.failed', [
+                'chat_id' => $chatId,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        } catch (Throwable $e) {
+            \Log::error('telegram.sendMessage.error', [
+                'chat_id' => $chatId,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
     }
 
     public function editMessage(int $chatId, int $messageId, string $text, $keyboard)
@@ -85,6 +100,18 @@ class NavigationService
             if (str_contains($e->getMessage(), 'message is not modified')) {
                 return null;
             }
+            \Log::warning('telegram.editMessage.failed', [
+                'chat_id' => $chatId,
+                'message_id' => $messageId,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        } catch (Throwable $e) {
+            \Log::error('telegram.editMessage.error', [
+                'chat_id' => $chatId,
+                'message_id' => $messageId,
+                'error' => $e->getMessage(),
+            ]);
             throw $e;
         }
     }
