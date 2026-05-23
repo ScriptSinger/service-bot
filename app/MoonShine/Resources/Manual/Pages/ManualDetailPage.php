@@ -42,9 +42,9 @@ class ManualDetailPage extends DetailPage
             HasMany::make('Files', 'files', null, ManualFileResource::class)
                 ->fields([
                     ID::make()->sortable(),
-                    Text::make('Title', 'title'),
+                    Text::make('Title', 'file_name'),
                     File::make('Manual File', 'file_url')
-                        ->disk('public')
+                        ->disk('yandex')
                         ->dir('manuals/files')
                         ->allowedExtensions(['pdf'])
                         ->removable(),

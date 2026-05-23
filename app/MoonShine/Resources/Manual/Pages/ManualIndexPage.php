@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\Manual\Pages;
 
 use App\Models\Brand;
+use App\Models\DeviceType;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
@@ -74,6 +75,25 @@ class ManualIndexPage extends IndexPage
                         $query->whereHas(
                             'deviceModel',
                             static fn ($deviceModelQuery) => $deviceModelQuery->where('brand_id', $value)
+                        );
+                    }
+
+                    return $query;
+                }),
+            Select::make('Тип техники', 'device_type_id')
+                ->options(
+                    DeviceType::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
+                        ->all()
+                )
+                ->nullable()
+                ->searchable()
+                ->onApply(static function ($query, $value) {
+                    if (filled($value)) {
+                        $query->whereHas(
+                            'deviceModel.brand.deviceTypes',
+                            static fn ($deviceTypeQuery) => $deviceTypeQuery->whereKey($value)
                         );
                     }
 

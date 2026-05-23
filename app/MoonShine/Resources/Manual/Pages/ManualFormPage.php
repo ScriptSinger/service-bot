@@ -53,7 +53,7 @@ class ManualFormPage extends FormPage
                         Text::make('Language', 'language'),
 
                         File::make('File', 'file_url')
-                            ->disk('public')
+                            ->disk('yandex')
                             ->dir('manuals/files')
                             ->allowedExtensions(['pdf'])
                             ->removable(),

@@ -30,4 +30,27 @@ class YandexTemporaryUrlService
 
         return (string) $request->getUri();
     }
+
+    public static function makeFromUrl(string $url, string $expires = '+10 minutes'): string
+    {
+        $host = (string) parse_url($url, PHP_URL_HOST);
+
+        if (! str_contains($host, 'storage.yandexcloud.net')) {
+            return $url;
+        }
+
+        $path = trim((string) parse_url($url, PHP_URL_PATH), '/');
+
+        if ($path === '') {
+            return $url;
+        }
+
+        $bucket = trim((string) config('filesystems.disks.yandex.bucket'), '/');
+
+        if ($bucket !== '' && str_starts_with($path, $bucket . '/')) {
+            $path = substr($path, strlen($bucket) + 1);
+        }
+
+        return $path === '' ? $url : self::make($path, $expires);
+    }
 }
