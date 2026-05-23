@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\ManualFile;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\ManualFile;
 use App\MoonShine\Resources\ManualFile\Pages\ManualFileIndexPage;
 use App\MoonShine\Resources\ManualFile\Pages\ManualFileFormPage;
 use App\MoonShine\Resources\ManualFile\Pages\ManualFileDetailPage;
-
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
 
@@ -30,6 +28,16 @@ class ManualFileResource extends ModelResource
             ManualFileIndexPage::class,
             ManualFileFormPage::class,
             ManualFileDetailPage::class,
+        ];
+    }
+
+    public function search(): array
+    {
+        return [
+            'title',
+            'description',
+            'language',
+            'file_url',
         ];
     }
 }

@@ -37,4 +37,5 @@ class ManualResource extends ModelResource
             'deviceModel.name',
         ];
     }
+
 }

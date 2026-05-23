@@ -24,4 +24,18 @@ class Manual extends Model
     {
         return $this->deviceModel?->brand?->name;
     }
+
+    public function getDisplayNameAttribute(): string
+    {
+        $parts = array_values(array_filter([
+            $this->brand_name,
+            $this->deviceModel?->name,
+        ]));
+
+        if ($parts !== []) {
+            return implode(' / ', $parts);
+        }
+
+        return sprintf('Manual #%d', $this->getKey());
+    }
 }

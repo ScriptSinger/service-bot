@@ -36,7 +36,7 @@ class ManualFileDetailPage extends DetailPage
             BelongsTo::make(
                 'Manual',
                 'manual',
-                fn($item) => $item->title,
+                fn($item) => $item->display_name,
                 resource: ManualResource::class
             ),
             Text::make('File URL', 'file_url'),

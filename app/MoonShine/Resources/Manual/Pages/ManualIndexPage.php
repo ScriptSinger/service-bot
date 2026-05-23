@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Manual\Pages;
 
-use App\Models\DeviceModel;
+use App\Models\Brand;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
@@ -16,9 +16,9 @@ use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\Manual\ManualResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Date;
-use MoonShine\UI\Fields\Select;
 use Throwable;
 
 
@@ -59,7 +59,28 @@ class ManualIndexPage extends IndexPage
      */
     protected function filters(): iterable
     {
-        return [];
+        return [
+            Select::make('Brand', 'brand_id')
+                ->options(
+                    Brand::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
+                        ->all()
+                )
+                ->nullable()
+                ->searchable()
+                ->onApply(static function ($query, $value) {
+                    if (filled($value)) {
+                        $query->whereHas(
+                            'deviceModel',
+                            static fn ($deviceModelQuery) => $deviceModelQuery->where('brand_id', $value)
+                        );
+                    }
+
+                    return $query;
+                }),
+
+        ];
     }
 
     /**

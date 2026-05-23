@@ -39,7 +39,7 @@ class ManualFileFormPage extends FormPage
                 BelongsTo::make(
                     'Manual',
                     'manual',
-                    fn($item) => $item->deviceModel?->name,
+                    fn($item) => $item->display_name,
                     ManualResource::class
                 )
                     ->required(),

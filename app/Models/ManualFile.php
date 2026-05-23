@@ -17,4 +17,13 @@ class ManualFile extends Model
     {
         return $this->belongsTo(Manual::class);
     }
+
+    public function getFileNameAttribute(): string
+    {
+        if (! is_string($this->file_url) || $this->file_url === '') {
+            return '';
+        }
+
+        return basename($this->file_url);
+    }
 }

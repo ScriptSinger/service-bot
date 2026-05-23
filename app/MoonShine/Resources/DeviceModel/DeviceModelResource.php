@@ -76,7 +76,7 @@ class DeviceModelResource extends ModelResource
                     fn($item) => $item->name,
                     BrandResource::class
                 ),
-                Text::make('Name'),
+                Text::make('Model'),
                 Textarea::make('Description'),
                 Number::make('Year From', 'year_from'),
                 Number::make('Year To', 'year_to'),

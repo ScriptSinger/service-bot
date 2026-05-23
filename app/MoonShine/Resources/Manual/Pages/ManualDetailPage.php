@@ -42,6 +42,7 @@ class ManualDetailPage extends DetailPage
             HasMany::make('Files', 'files', null, ManualFileResource::class)
                 ->fields([
                     ID::make()->sortable(),
+                    Text::make('Title', 'title'),
                     File::make('Manual File', 'file_url')
                         ->disk('public')
                         ->dir('manuals/files')

@@ -32,6 +32,16 @@ class DeviceModel extends Model
         return $this->hasMany(Manual::class, 'device_model_id');
     }
 
+    public function manualFiles()
+    {
+        return $this->hasManyThrough(
+            ManualFile::class,
+            Manual::class,
+            'device_model_id',
+            'manual_id'
+        );
+    }
+
     public function testModes()
     {
         return $this->hasMany(TestMode::class, 'device_model_id');

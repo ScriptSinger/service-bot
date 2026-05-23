@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\DeviceModel\Pages;
 
+use App\Models\Brand;
+use App\Models\DeviceType;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -12,7 +14,8 @@ use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use App\MoonShine\Resources\DeviceModel\DeviceModelResource;
 use MoonShine\Support\ListOf;
-
+use MoonShine\UI\Fields\Select;
+use MoonShine\UI\Fields\Text;
 use Throwable;
 
 /**
@@ -40,7 +43,33 @@ class DeviceModelIndexPage extends IndexPage
      */
     protected function filters(): iterable
     {
-        return [];
+        return [
+            Text::make('Name', 'name'),
+            Select::make('Тип техники', 'device_type_id')
+                ->options(
+                    DeviceType::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
+                        ->all()
+                )
+                ->nullable()
+                ->searchable(),
+            Select::make('Brand', 'brand_id')
+                ->options(
+                    Brand::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
+                        ->all()
+                )
+                ->nullable()
+                ->searchable(),
+            Select::make('Active', 'active')
+                ->options([
+                    1 => 'Yes',
+                    0 => 'No',
+                ])
+                ->nullable(),
+        ];
     }
 
     /**

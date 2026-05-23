@@ -15,7 +15,9 @@ use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\ManualFile\ManualFileResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\DateRange;
 use MoonShine\UI\Fields\Date;
+use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Textarea;
 use Throwable;
@@ -41,7 +43,7 @@ class ManualFileIndexPage extends IndexPage
             BelongsTo::make(
                 'Manual',
                 'manual',
-                fn($item) => $item->title,
+                fn($item) => $item->display_name,
                 ManualResource::class
             )->sortable(),
             Text::make('File URL', 'file_url')->sortable(),
@@ -60,7 +62,24 @@ class ManualFileIndexPage extends IndexPage
      */
     protected function filters(): iterable
     {
-        return [];
+        return [
+            Text::make('Title', 'title'),
+            Text::make('Description', 'description'),
+            Select::make('Language', 'language')
+                ->options(config('languages'))
+                ->nullable()
+                ->searchable(),
+            BelongsTo::make(
+                'Manual',
+                'manual',
+                fn($item) => $item->display_name,
+                ManualResource::class
+            )
+                ->nullable()
+                ->searchable(),
+            DateRange::make('Created At', 'created_at'),
+            DateRange::make('Updated At', 'updated_at'),
+        ];
     }
 
     /**
@@ -68,7 +87,21 @@ class ManualFileIndexPage extends IndexPage
      */
     protected function queryTags(): array
     {
-        return [];
+        return [
+            QueryTag::make(
+                'No language',
+                fn ($query) => $query->whereNull('language')
+            ),
+            ...collect(config('languages', []))
+            ->map(
+                fn (string $label, string $code): QueryTag => QueryTag::make(
+                    $label,
+                    fn ($query) => $query->where('language', $code)
+                )
+            )
+            ->values()
+            ->all(),
+        ];
     }
 
     /**

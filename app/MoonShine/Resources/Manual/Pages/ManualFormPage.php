@@ -48,7 +48,7 @@ class ManualFormPage extends FormPage
                 HasMany::make('Files', 'files', null, ManualFileResource::class)
                     ->fields([
                         ID::make()->sortable(),
-                        Text::make('Title', 'title'),
+                        Text::make('File Name', 'file_name'),
                         Textarea::make('Description'),
                         Text::make('Language', 'language'),
 
